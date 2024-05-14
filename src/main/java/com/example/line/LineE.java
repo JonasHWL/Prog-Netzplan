@@ -1,51 +1,46 @@
 package com.example.line;
 
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-
+import java.util.Random;
 
 public class LineE {
 
     Line line;
     Circle startPoint, endPoint;
+    Random rand = new Random();
 
     public LineE(Pane root){
         createLine(root);
     }
 
     private void createLine(Pane root){
-        line = new Line(50,50,100,100);
-        line.setStroke(Color.BLACK);
-        line.setStrokeWidth(2);
 
-        startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
-        endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
+            int Z1 = rand.nextInt(100);
+            int Z4 = rand.nextInt(100);
+            int StartX = Z1;
+            int StartY = Z4;
 
-        startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true));
-        endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false));
 
-        root.getChildren().addAll(line, startPoint, endPoint);
-    }
+            for(int i = 0; i <= 5; i++) {
 
-    private void handlePointMouseDragged(MouseEvent event, Line line, Boolean startPoint) {
-        Circle point = (Circle) event.getSource();
-        double offsetX = event.getX();
-        double offsetY = event.getY();
-        point.setCenterX(offsetX);
-        point.setCenterY(offsetY);
-        point.setLayoutX(event.getSceneX() - offsetX);
-        point.setLayoutY(event.getSceneY() - offsetY);
+                int StopX = rand.nextInt(400);
+                int StopY = rand.nextInt(400);
+                // SX SY EX EY
+                line = new Line(StartX, StartY, StopX, StopY);
+                line.setStroke(Color.BLACK);
+                line.setStrokeWidth(2);
 
-        if (startPoint) {
-            line.setStartX(offsetX);
-            line.setStartY(offsetY);
-        } else {
-            line.setEndX(offsetX);
-            line.setEndY(offsetY);
-        }
+                startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
+                endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
+
+                root.getChildren().addAll(line, startPoint, endPoint);
+
+                StartX = StopX;
+                StartY = StopY;
+            }
     }
 
     private Circle createDraggablePoint(double x, double y) {
@@ -56,11 +51,4 @@ public class LineE {
         point.setCenterY(y);
         return point;
     }
-
-    public void removeLineFrom(Pane root){
-        root.getChildren().remove(line);
-        root.getChildren().remove(startPoint);
-        root.getChildren().remove(endPoint);
-    }
-
 }
