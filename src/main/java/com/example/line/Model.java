@@ -11,6 +11,9 @@ import java.io.IOException;
 public class Model {
     private final long seed;
     private final Random rand;
+    private final int anzahlParkhaus;
+    private final int anzahlBushaltestellen;
+    private final int anzahlBahnhof;
     private final ArrayList<Punkt> punkte = new ArrayList<>();
     //private ArrayList<Fahrzeug> fahrzeuge = new ArrayList<Fahrzeug>();
     private final ArrayList<ArrayList<Weg>> wege= new ArrayList<>();
@@ -26,6 +29,9 @@ public class Model {
     Model(Pane root, long seed, int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof){
         this.seed = seed;
         this.rand = new Random(seed);
+        this.anzahlParkhaus = anzahlParkhaus;
+        this.anzahlBushaltestellen = anzahlBushaltestellen;
+        this.anzahlBahnhof = anzahlBahnhof;
 
         //Methode soll vom Controller aufgerufen werden!
         benutzerDefinierterPunkt(4, 4, "Custom", 'p');
@@ -53,7 +59,6 @@ public class Model {
             punkte.add(new Parkhaus(xPos*40, yPos*40, "Parkhaus"));
         }
 
-        /*
         for (int i = 0; i < anzahlBushaltestellen; i++){
             int randPostion = rand.nextInt(0,  punkte.size());
             punkte.set(randPostion, new Bushaltestelle(punkte.get(randPostion).getXPos(), punkte.get(randPostion).getYPos(), "Bus"));
@@ -64,7 +69,6 @@ public class Model {
             int yPos = rand.nextInt(1,20);
             punkte.add(new Bahnhof(xPos*20, yPos*20, "Parkhaus"));
         }
-        */
     }
 
     /**
@@ -159,7 +163,18 @@ public class Model {
 
         try {
             FileWriter schreiber = new FileWriter("karte.txt");
-            schreiber.write("Files in Java might be tricky, but it is fun enough! "+ seed);
+            schreiber.write("Seed=" + seed +"\n");
+            schreiber.write("Parkhaus=" + anzahlParkhaus +"\n");
+            schreiber.write("Bushaltestellen=" + anzahlBushaltestellen +"\n");
+            schreiber.write("Bahnhof=" + anzahlBahnhof +"\n");
+            for (Punkt punkt : punkte) {
+                schreiber.write(punkt.toString() +"\n");
+            }
+            for (ArrayList<Weg> wegeArr : wege) {
+                for (Weg weg : wegeArr) {
+                    schreiber.write(weg.toString() +"\n");
+                }
+            }
             schreiber.close();
             System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {

@@ -6,4 +6,9 @@ public class Schiene extends Weg{
     Schiene(Bahnhof start, Bahnhof ende, int schritt) {
         super(start, ende, Color.LIGHTGREEN, schritt);
     }
+
+    @Override
+    public String toString(){
+        return super.toString("Schiene");
+    }
 }

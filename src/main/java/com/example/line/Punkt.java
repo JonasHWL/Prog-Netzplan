@@ -33,4 +33,12 @@ public abstract class Punkt extends Circle {
                 ", farbeColor=" + farbeColor +
                 "]";
     }
+
+    protected String toString(String datentyp) {
+        return datentyp + "[" + "xPos=" + xPos +
+                ", yPos=" + yPos +
+                ", name=" + name +
+                ", farbeColor=" + farbeColor +
+                "]";
+    }
 }

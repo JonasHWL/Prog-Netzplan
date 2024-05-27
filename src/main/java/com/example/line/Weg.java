@@ -83,4 +83,20 @@ public abstract class Weg extends Line {
                 ", Schritt=" + schritt +
                 "]";
     }
+
+    /**
+     *
+     * @param datentyp Ob es eine Stasze, Buslinie oder Schiene ist.
+     * @return Daten vom Objekt als String.
+     */
+    public String toString(String datentyp){
+        return datentyp + "[" + "StartX=" + startX +
+                ", StartY=" + startY +
+                ", EndeX=" + endeX +
+                ", EndeY=" + endeY +
+                ", StrokeColor=" + farbe +
+                ", Horizontal=" + horizontal +
+                ", Schritt=" + schritt +
+                "]";
+    }
 }

@@ -18,4 +18,13 @@ public class Strasze extends Weg{
     Strasze(Zwischenpunkt start, Punkt ende, boolean horizontal, int schritt) {
         super(start, ende, Color.BLACK, horizontal, schritt);
     }
+
+    /**
+     *LUL
+     * @return Daten vom Objekt als String
+     */
+    @Override
+    public String toString(){
+        return super.toString("Strasze");
+    }
 }

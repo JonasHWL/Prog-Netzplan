@@ -16,4 +16,9 @@ public class Buslinie extends Strasze{
     Buslinie(Zwischenpunkt start, Punkt ende, boolean horizontal, int schritt) {
         super(start, ende, horizontal, schritt);
     }
+
+    @Override
+    public String toString(){
+        return super.toString("Buslinie");
+    }
 }
