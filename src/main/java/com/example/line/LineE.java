@@ -9,15 +9,22 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class LineE {
-
-    //Line line;
-    //Circle startPoint, endPoint;
-    Random rand = new Random();
+    private final Random rand = new Random();
     /**
      * ArrayList which stores all Points
      * Change Points Class to abstract FlächenEinheiten
      */
-    ArrayList<Points> pointsList = new ArrayList<>();
+    private final ArrayList<Points> pointsList = new ArrayList<>();
+
+    /**
+     * ArrayList which stores all Circles
+     */
+    private final ArrayList<Circle> circleList = new ArrayList<>();
+
+    /**
+     * ArrayList which stores all Lines
+     */
+    private final ArrayList<Line> lineList = new ArrayList<>();
 
     public LineE(Pane root){
         createLine(root);
@@ -28,35 +35,6 @@ public class LineE {
      * @param root Jonas erklär mal
      */
     private void createLine(Pane root){
-        /*
-        //Erstellung aller Punkte (Bald Flächeineinheiten)
-        for (int i = 0; i < 5; i++){
-            int xPos = rand.nextInt(1, 15);
-            int yPos = rand.nextInt(1,15);
-            pointsList.add(new Points(xPos*20, yPos*20));
-        }
-
-        //Durch die pointsList durchgehen, um alle Punkte ein Paar zu geben
-        for (int i = 0; i < pointsList.size(); i++){
-            //Punkte A
-            Points current = pointsList.get(i);
-            //Punkt B, kontrolliert, ob das i element das letzte ist um als Paar das erste zu geben
-            if(i+1 < pointsList.size()){
-                Points next = pointsList.get(i+1);
-                line = new Line(current.x(), current.y(), next.x(), next.y());
-                //Falls es
-            } else {
-                line = new Line(current.x(), current.y(), pointsList.getFirst().x(), pointsList.getFirst().y());
-            }
-            //Die Liniengeneration von Jonas
-            line.setStroke(Color.BLACK);
-            line.setStrokeWidth(2);
-            startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
-            endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
-            root.getChildren().addAll(line, startPoint, endPoint);
-        }
-
-         */
         for (int i = 0; i < 5; i++){
             int xPos = rand.nextInt(1, 15);
             int yPos = rand.nextInt(1,15);
@@ -74,67 +52,59 @@ public class LineE {
                 next = pointsList.getFirst();
             }
 
-            // Create the corner point
-            int cornerX = next.x;
-            int cornerY = current.y;
+            Points middle = new Points( (current.x+next.x)/2, (current.y+next.y)/2);
 
-            // Draw the first line (horizontal)
-            Line line1 = new Line(current.x, current.y, cornerX, cornerY);
-            line1.setStroke(Color.BLACK);
-            line1.setStrokeWidth(2);
-            Circle startPoint1 = createDraggablePoint(line1.getStartX(), line1.getStartY());
-            //Circle endPoint1 = createDraggablePoint(line1.getEndX(), line1.getEndY(), "blue");
-            //root.getChildren().addAll(line1, startPoint1, endPoint1);
-            root.getChildren().addAll(line1, startPoint1);
-            //root.getChildren().addAll(line1);
+            Line line;
 
-            // Draw the second line (vertical)
-            Line line2 = new Line(cornerX, cornerY, next.x, next.y);
-            line2.setStroke(Color.BLACK);
-            line2.setStrokeWidth(2);
-            //Circle startPoint2 = createDraggablePoint(line2.getStartX(), line2.getStartY(), "blue");
-            Circle endPoint2 = createDraggablePoint(line2.getEndX(), line2.getEndY());
-            //root.getChildren().addAll(line2, startPoint2, endPoint2);
-            root.getChildren().addAll(line2, endPoint2);
-            //root.getChildren().addAll(line2);
+            //Create line (horizontal) to middle
+            line = new Line(current.x,current.y,current.x,middle.y);
+            lineList.add(addLine(line));
+
+            //Create a circle and store it in circleList Muss nach der ersten Line sein
+            Circle circlePoint = createPoint(line.getStartX(), line.getStartY());
+            circleList.add(circlePoint);
+
+            //Create line (vertical) to middle and store it in lineList
+            line = new Line(current.x,middle.y,middle.x,middle.y);
+            lineList.add(addLine(line));
+
+            //Create line (horizontal) and store it in lineList
+            line = new Line(middle.x, middle.y, middle.x, next.y);
+            lineList.add(addLine(line));
+
+            // Create the second line (vertical) and store it in lineList
+            line = new Line(middle.x, next.y, next.x, next.y);
+            lineList.add(addLine(line));
+
+            //Create a circle and store it in circleList
+            circlePoint = createPoint(line.getEndX(), line.getEndY());
+            circleList.add(circlePoint);
         }
 
+        //Draw all Lines
+        for (Line line : lineList) {
+            root.getChildren().addAll(line);
+        }
+        //Draw all Circles
+        for (Circle circle : circleList) {
+            root.getChildren().addAll(circle);
+        }
 
-        /*
-            int Z1 = rand.nextInt(100);
-            int Z4 = rand.nextInt(100);
-            int StartX = Z1;
-            int StartY = Z4;
-
-
-            for(int i = 0; i <= 5; i++) {
-
-                int StopX = rand.nextInt(400);
-                int StopY = rand.nextInt(400);
-                // SX SY EX EY
-                line = new Line(StartX, StartY, StopX, StopY);
-                line.setStroke(Color.BLACK);
-                line.setStrokeWidth(2);
-
-                startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
-                endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
-
-                root.getChildren().addAll(line, startPoint, endPoint);
-
-                StartX = StopX;
-                StartY = StopY;
-            }
-
-         */
     }
 
-    private Circle createDraggablePoint(double x, double y) {
+    private Circle createPoint(double x, double y) {
         Circle point = new Circle(x, y, 5, Color.RED);
         point.setStroke(Color.BLACK);
         point.setStrokeWidth(1);
         point.setCenterX(x);
         point.setCenterY(y);
         return point;
+    }
+
+    private Line addLine(Line line){
+        line.setStroke(Color.BLACK);
+        line.setStrokeWidth(2);
+        return line;
     }
 
     private record Points(int x, int y) {
