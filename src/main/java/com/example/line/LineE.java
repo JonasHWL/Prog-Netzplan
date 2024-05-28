@@ -54,15 +54,19 @@ public class LineE {
 
             Points middle = new Points( (current.x+next.x)/2, (current.y+next.y)/2);
 
+            //Create a circle and store it in circleList
+            Circle circlePoint = createPoint(current.x, current.y);
+            circleList.add(circlePoint);
+
+            //Create a circle and store it in circleList
+            circlePoint = createPoint(next.x, next.y);
+            circleList.add(circlePoint);
+
             Line line;
 
             //Create line (horizontal) to middle
             line = new Line(current.x,current.y,current.x,middle.y);
             lineList.add(addLine(line));
-
-            //Create a circle and store it in circleList Muss nach der ersten Line sein
-            Circle circlePoint = createPoint(line.getStartX(), line.getStartY());
-            circleList.add(circlePoint);
 
             //Create line (vertical) to middle and store it in lineList
             line = new Line(current.x,middle.y,middle.x,middle.y);
@@ -75,10 +79,6 @@ public class LineE {
             // Create the second line (vertical) and store it in lineList
             line = new Line(middle.x, next.y, next.x, next.y);
             lineList.add(addLine(line));
-
-            //Create a circle and store it in circleList
-            circlePoint = createPoint(line.getEndX(), line.getEndY());
-            circleList.add(circlePoint);
         }
 
         //Draw all Lines
@@ -107,7 +107,5 @@ public class LineE {
         return line;
     }
 
-    private record Points(int x, int y) {
-
-    }
+    private record Points(int x, int y) { }
 }
