@@ -11,7 +11,7 @@ import java.util.Random;
 public class LineE {
     private final Random randSeed = new Random();
     //private final int seed = randSeed.nextInt();
-    private final int seed = 123; //Hardcoded seed als Beispiel
+    private final long seed = 9223372036854775807L; //Hardcoded seed als Beispiel 9223372036854775807L ist längste was geht
     private final Random rand = new Random(seed);
     /**
      * ArrayList which stores all Points
