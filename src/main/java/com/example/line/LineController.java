@@ -16,7 +16,10 @@ public class LineController {
 
     @FXML
     void Eline(ActionEvent event) {
-        LineE newLine = new LineE(anchorPane);
-        lines.add(newLine);
+
+        //LineE newLine = new LineE(anchorPane);
+        //lines.add(newLine);
+
+        Model model = new Model(anchorPane, 9223372036854775807L, 5, 0, 0);
     }
 }
