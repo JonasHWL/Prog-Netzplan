@@ -92,16 +92,16 @@ public class Model {
             for (int j = 0; j < 4; j++) {
                 switch (j) {
                     case 0:
-                        wege.add(new Strasze(aktuell,mittel));
+                        wege.add(new Strasze(aktuell,mittel, j));
                         break;
                     case 1:
-                        wege.add(new Strasze(aktuell, mittel, true));
+                        wege.add(new Strasze(aktuell, mittel, true, j));
                         break;
                     case 2:
-                        wege.add(new Strasze(mittel, nächste));
+                        wege.add(new Strasze(mittel, nächste, j));
                         break;
                     case 3:
-                        wege.add(new Strasze(mittel, nächste, true));
+                        wege.add(new Strasze(mittel, nächste, true, j));
                         break;
                 }
             }

@@ -24,4 +24,13 @@ public abstract class Punkt extends Circle {
     public double getyPos() {
         return yPos;
     }
+
+    @Override
+    public String toString() {
+        return "Punkt[" + "xPos=" + xPos +
+                ", yPos=" + yPos +
+                ", name=" + name +
+                ", farbeColor=" + farbeColor +
+                "]";
+    }
 }
