@@ -2,6 +2,7 @@ package com.example.line;
 
 import javafx.scene.layout.Pane;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,6 +12,7 @@ public class Model {
     private final ArrayList<Punkt> punkte = new ArrayList<>();
     //private ArrayList<Fahrzeug> fahrzeuge = new ArrayList<Fahrzeug>();
     private final ArrayList<ArrayList<Weg>> wege= new ArrayList<>();
+    private final ArrayList<Punkt> benutzerPunkte = new ArrayList<>();
 
     /**
      * Konstruktor für das Model.
@@ -25,8 +27,18 @@ public class Model {
         this.rand = new Random(seed);
 
         generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
+        zeichnePunkte(root);
+
+        //Benutzer Punkte Test
+        benutzerPunkte.add(erstelleBenutzerdefinierterPunktObjekt(4,4,"Custom", 'p'));
+        benutzerPunkte.add(erstelleBenutzerdefinierterPunktObjekt(14,14,"Custom2", 'p'));
+        benutzerPunkte.add(erstelleBenutzerdefinierterPunktObjekt(6,10,"Custom3", 'p'));
+        zeichneBenutzerPunkte(root);
+        punkte.addAll(benutzerPunkte);
+
+
         erstelleStraszen(punkte);
-        zeichne(root);
+        zeichneWege(root);
     }
 
     /**
@@ -44,9 +56,8 @@ public class Model {
         }
 
         for (int i = 0; i < anzahlBushaltestellen; i++){
-            int xPos = rand.nextInt(1, 20);
-            int yPos = rand.nextInt(1,20);
-            punkte.add(new Bushaltestelle(xPos*20, yPos*20, "Bus"));
+            int randPostion = rand.nextInt(0,  punkte.size());
+            punkte.set(randPostion, new Bushaltestelle(punkte.get(randPostion).getxPos(), punkte.get(randPostion).getyPos(), "Bus"));
         }
 
         for (int i = 0; i < anzahlBahnhof; i++){
@@ -78,10 +89,22 @@ public class Model {
 
             ArrayList<Weg> wege = new ArrayList<>();
 
-            wege.add(new Strasze(aktuell,mittel));
-            wege.add(new Strasze(aktuell, mittel, true));
-            wege.add(new Strasze(mittel, nächste));
-            wege.add(new Strasze(mittel, nächste, true));
+            for (int j = 0; j < 4; j++) {
+                switch (j) {
+                    case 0:
+                        wege.add(new Strasze(aktuell,mittel));
+                        break;
+                    case 1:
+                        wege.add(new Strasze(aktuell, mittel, true));
+                        break;
+                    case 2:
+                        wege.add(new Strasze(mittel, nächste));
+                        break;
+                    case 3:
+                        wege.add(new Strasze(mittel, nächste, true));
+                        break;
+                }
+            }
 
             this.wege.add(wege);
         }
@@ -92,14 +115,48 @@ public class Model {
      *
      * @param root Das Fenster Objekt
      */
-    private void zeichne(Pane root){
+    private void zeichneWege(Pane root){
         for (ArrayList<Weg> wegeArr : wege) {
             for (Weg weg : wegeArr) {
+                System.out.println(weg.toString());
                 root.getChildren().addAll(weg);
             }
         }
+    }
 
+    /**
+     * Geht durch punkte durch, um alle Punkte darzustellen.
+     *
+     * @param root Das Fenster Objekt
+     */
+    private void zeichnePunkte(Pane root){
         for (Punkt punkt : punkte) {
+            System.out.println(punkt.toString());
+            root.getChildren().addAll(punkt);
+        }
+    }
+
+    /**
+     * Erstelle ein benutzerdefinierter Punkt.
+     *
+     * @param xPos X-Achsen Position des Punkts 1-15.
+     * @param yPos Y-Achsen Position des Punkts 1-15.
+     * @param name Name zur identifikation des Punkts.
+     * @param datentyp Welcher Datentyp zurückgegeben werden soll. 'p' Für Parkhaus, 'b' Für Bushaltestelle und 'z' Für Bahnhof.
+     * @return Parkhaus, Bushaltestelle oder Bahnhof
+     */
+    private Punkt erstelleBenutzerdefinierterPunktObjekt(int xPos, int yPos, String name, char datentyp){
+        return switch (datentyp) {
+            case 'p' -> new Parkhaus(xPos*40, yPos*40, name);
+            case 'b' -> new Bushaltestelle(xPos*40, yPos*40, name);
+            case 'z' -> new Bahnhof(xPos*40, yPos*40, name);
+            default -> null; //Weil sonst IntelliJ meckert
+        };
+    }
+
+    private void zeichneBenutzerPunkte(Pane root){
+        for (Punkt punkt : benutzerPunkte) {
+            System.out.println(punkt.toString());
             root.getChildren().addAll(punkt);
         }
     }
