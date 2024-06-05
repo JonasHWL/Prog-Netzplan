@@ -57,7 +57,7 @@ public class Model {
 
         for (int i = 0; i < anzahlBushaltestellen; i++){
             int randPostion = rand.nextInt(0,  punkte.size());
-            punkte.set(randPostion, new Bushaltestelle(punkte.get(randPostion).getxPos(), punkte.get(randPostion).getyPos(), "Bus"));
+            punkte.set(randPostion, new Bushaltestelle(punkte.get(randPostion).getXPos(), punkte.get(randPostion).getYPos(), "Bus"));
         }
 
         for (int i = 0; i < anzahlBahnhof; i++){
@@ -85,7 +85,7 @@ public class Model {
                 nächste = (Parkhaus) punkte.getFirst();
             }
 
-            Zwischenpunkt mittel = new Zwischenpunkt((aktuell.getxPos() + nächste.getxPos()) / 2, (aktuell.getyPos() + nächste.getyPos()) / 2, "Hallo");
+            Zwischenpunkt mittel = new Zwischenpunkt((aktuell.getXPos() + nächste.getXPos()) / 2, (aktuell.getYPos() + nächste.getYPos()) / 2, "Hallo");
 
             ArrayList<Weg> wege = new ArrayList<>();
 
@@ -144,7 +144,7 @@ public class Model {
      * @param name Name zur identifikation des Punkts.
      * @param datentyp Welcher Datentyp zurückgegeben werden soll. 'p' Für Parkhaus, 'b' Für Bushaltestelle und 'z' Für Bahnhof.
      * @return Parkhaus, Bushaltestelle oder Bahnhof
-     */
+     */ //TODO Bessere Koordination mit Controller.
     private Punkt erstelleBenutzerdefinierterPunktObjekt(int xPos, int yPos, String name, char datentyp){
         return switch (datentyp) {
             case 'p' -> new Parkhaus(xPos*40, yPos*40, name);
@@ -159,5 +159,10 @@ public class Model {
             System.out.println(punkt.toString());
             root.getChildren().addAll(punkt);
         }
+    }
+
+    //TODO Export in .txt Datei.
+    private void export(){
+
     }
 }

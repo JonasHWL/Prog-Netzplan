@@ -17,11 +17,11 @@ public abstract class Punkt extends Circle {
         this.farbeColor = farbe;
     }
 
-    public double getxPos() {
+    public double getXPos() {
         return xPos;
     }
 
-    public double getyPos() {
+    public double getYPos() {
         return yPos;
     }
 
