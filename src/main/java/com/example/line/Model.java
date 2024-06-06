@@ -1,8 +1,12 @@
 package com.example.line;
 
 import javafx.scene.layout.Pane;
+
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.File;
+import java.io.IOException;
 
 public class Model {
     private final long seed;
@@ -31,6 +35,8 @@ public class Model {
         generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
         erstelleStraszen(punkte);
         zeichne(root);
+
+        export();
     }
 
     /**
@@ -138,8 +144,26 @@ public class Model {
         }
     }
 
-    //TODO Export in .txt Datei.
     private void export(){
+        try{
+            File export = new File("karte.txt");
+            if(export.createNewFile()){
+                System.out.println("Datei erstellt! " + export.getName());
+            } else{
+                System.out.println("Datei existiert bereits!");
+            }
+        } catch (IOException e){
+            System.out.println("An error occurred.");
+            throw new RuntimeException(e);
+        }
 
+        try {
+            FileWriter schreiber = new FileWriter("karte.txt");
+            schreiber.write("Files in Java might be tricky, but it is fun enough! "+ seed);
+            schreiber.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
