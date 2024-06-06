@@ -1,8 +1,6 @@
 package com.example.line;
 
 import javafx.scene.layout.Pane;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -25,6 +23,8 @@ public class Model {
     Model(Pane root, long seed, int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof){
         this.seed = seed;
         this.rand = new Random(seed);
+
+        //TODO Benutzer Punkte -> Random Punkte -> Linien
 
         generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
         zeichnePunkte(root);
@@ -55,6 +55,7 @@ public class Model {
             punkte.add(new Parkhaus(xPos*40, yPos*40, "Parkhaus"));
         }
 
+        /*
         for (int i = 0; i < anzahlBushaltestellen; i++){
             int randPostion = rand.nextInt(0,  punkte.size());
             punkte.set(randPostion, new Bushaltestelle(punkte.get(randPostion).getXPos(), punkte.get(randPostion).getYPos(), "Bus"));
@@ -65,6 +66,7 @@ public class Model {
             int yPos = rand.nextInt(1,20);
             punkte.add(new Bahnhof(xPos*20, yPos*20, "Parkhaus"));
         }
+        */
     }
 
     /**
@@ -76,37 +78,37 @@ public class Model {
     private void erstelleStraszen(ArrayList<Punkt> punkte){
         for (int i = 0; i < punkte.size(); i++) {
             // Current point A
-            Parkhaus aktuell = (Parkhaus) punkte.get(i);
-            // Next point B, check if the aktuell element is the last to loop back to the first
-            Parkhaus nächste;
-            if (i + 1 < punkte.size()) {
-                nächste = (Parkhaus) punkte.get(i + 1);
-            } else {
-                nächste = (Parkhaus) punkte.getFirst();
-            }
-
-            Zwischenpunkt mittel = new Zwischenpunkt((aktuell.getXPos() + nächste.getXPos()) / 2, (aktuell.getYPos() + nächste.getYPos()) / 2, "Hallo");
-
-            ArrayList<Weg> wege = new ArrayList<>();
-
-            for (int j = 0; j < 4; j++) {
-                switch (j) {
-                    case 0:
-                        wege.add(new Strasze(aktuell,mittel, j));
-                        break;
-                    case 1:
-                        wege.add(new Strasze(aktuell, mittel, true, j));
-                        break;
-                    case 2:
-                        wege.add(new Strasze(mittel, nächste, j));
-                        break;
-                    case 3:
-                        wege.add(new Strasze(mittel, nächste, true, j));
-                        break;
+            if(punkte.get(i) instanceof Parkhaus aktuell){
+                // Next point B, check if the aktuell element is the last to loop back to the first
+                Parkhaus naechste;
+                if (i + 1 < punkte.size()) {
+                    naechste = (Parkhaus) punkte.get(i + 1);
+                } else {
+                    naechste = (Parkhaus) punkte.getFirst();
                 }
-            }
 
-            this.wege.add(wege);
+                Zwischenpunkt mittel = new Zwischenpunkt((aktuell.getXPos() + naechste.getXPos()) / 2, (aktuell.getYPos() + naechste.getYPos()) / 2, "Hallo");
+
+                ArrayList<Weg> wege = new ArrayList<>();
+
+                for (int j = 0; j < 4; j++) {
+                    switch (j) {
+                        case 0:
+                            wege.add(new Strasze(aktuell,mittel, j));
+                            break;
+                        case 1:
+                            wege.add(new Strasze(aktuell, mittel, true, j));
+                            break;
+                        case 2:
+                            wege.add(new Strasze(mittel, naechste, j));
+                            break;
+                        case 3:
+                            wege.add(new Strasze(mittel, naechste, true, j));
+                            break;
+                    }
+                }
+                this.wege.add(wege);
+            }
         }
     }
 
