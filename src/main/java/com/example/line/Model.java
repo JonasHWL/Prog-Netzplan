@@ -10,7 +10,6 @@ public class Model {
     private final ArrayList<Punkt> punkte = new ArrayList<>();
     //private ArrayList<Fahrzeug> fahrzeuge = new ArrayList<Fahrzeug>();
     private final ArrayList<ArrayList<Weg>> wege= new ArrayList<>();
-    private final ArrayList<Punkt> benutzerPunkte = new ArrayList<>();
 
     /**
      * Konstruktor für das Model.
@@ -24,21 +23,14 @@ public class Model {
         this.seed = seed;
         this.rand = new Random(seed);
 
-        //TODO Benutzer Punkte -> Random Punkte -> Linien
+        //Methode soll vom Controller aufgerufen werden!
+        benutzerDefinierterPunkt(4, 4, "Custom", 'p');
+        benutzerDefinierterPunkt(14,14,"Custom2", 'p');
+        benutzerDefinierterPunkt(6,10,"Custom3", 'p');
 
         generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
-        zeichnePunkte(root);
-
-        //Benutzer Punkte Test
-        benutzerPunkte.add(erstelleBenutzerdefinierterPunktObjekt(4,4,"Custom", 'p'));
-        benutzerPunkte.add(erstelleBenutzerdefinierterPunktObjekt(14,14,"Custom2", 'p'));
-        benutzerPunkte.add(erstelleBenutzerdefinierterPunktObjekt(6,10,"Custom3", 'p'));
-        zeichneBenutzerPunkte(root);
-        punkte.addAll(benutzerPunkte);
-
-
         erstelleStraszen(punkte);
-        zeichneWege(root);
+        zeichne(root);
     }
 
     /**
@@ -49,7 +41,7 @@ public class Model {
      * @param anzahlBahnhof Anzahl der zu erstellenden Punkte
      */
     private void generierePunkte(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof){
-        for (int i = 0; i < anzahlParkhaus; i++){
+        while ( punkte.size() < anzahlParkhaus){
             int xPos = rand.nextInt(1, 15);
             int yPos = rand.nextInt(1,15);
             punkte.add(new Parkhaus(xPos*40, yPos*40, "Parkhaus"));
@@ -117,21 +109,14 @@ public class Model {
      *
      * @param root Das Fenster Objekt
      */
-    private void zeichneWege(Pane root){
+    private void zeichne(Pane root){
         for (ArrayList<Weg> wegeArr : wege) {
             for (Weg weg : wegeArr) {
                 System.out.println(weg.toString());
                 root.getChildren().addAll(weg);
             }
         }
-    }
 
-    /**
-     * Geht durch punkte durch, um alle Punkte darzustellen.
-     *
-     * @param root Das Fenster Objekt
-     */
-    private void zeichnePunkte(Pane root){
         for (Punkt punkt : punkte) {
             System.out.println(punkt.toString());
             root.getChildren().addAll(punkt);
@@ -139,27 +124,17 @@ public class Model {
     }
 
     /**
-     * Erstelle ein benutzerdefinierter Punkt.
-     *
-     * @param xPos X-Achsen Position des Punkts 1-15.
-     * @param yPos Y-Achsen Position des Punkts 1-15.
-     * @param name Name zur identifikation des Punkts.
-     * @param datentyp Welcher Datentyp zurückgegeben werden soll. 'p' Für Parkhaus, 'b' Für Bushaltestelle und 'z' Für Bahnhof.
-     * @return Parkhaus, Bushaltestelle oder Bahnhof
-     */ //TODO Bessere Koordination mit Controller.
-    private Punkt erstelleBenutzerdefinierterPunktObjekt(int xPos, int yPos, String name, char datentyp){
-        return switch (datentyp) {
-            case 'p' -> new Parkhaus(xPos*40, yPos*40, name);
-            case 'b' -> new Bushaltestelle(xPos*40, yPos*40, name);
-            case 'z' -> new Bahnhof(xPos*40, yPos*40, name);
-            default -> null; //Weil sonst IntelliJ meckert
-        };
-    }
-
-    private void zeichneBenutzerPunkte(Pane root){
-        for (Punkt punkt : benutzerPunkte) {
-            System.out.println(punkt.toString());
-            root.getChildren().addAll(punkt);
+     * Methode die über dem Controller aufgerufen wird um benutzerdefinierte Punkte zu Erstellen
+     * @param xPos X-Position vom Punkt 1-15
+     * @param yPos Y-Position vom Punkt 1-15
+     * @param name Name vom Punkt
+     * @param datentyp Ob es Parkhaus 'p', Bushaltestelle 'b' oder Bahnhof 'z' ist
+     */
+    public void benutzerDefinierterPunkt(int xPos, int yPos, String name, char datentyp){
+        switch (datentyp) {
+            case 'p' -> punkte.add(new Parkhaus(xPos*40, yPos*40, name));
+            case 'b' -> punkte.add(new Bushaltestelle(xPos*40, yPos*40, name));
+            case 'z' -> punkte.add(new Bahnhof(xPos*40, yPos*40, name));
         }
     }
 
