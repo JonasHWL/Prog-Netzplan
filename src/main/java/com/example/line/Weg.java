@@ -3,6 +3,12 @@ package com.example.line;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
+/**
+ * Klasse für die Wege welche auf der Benutzeroberfläche angezeigt werden.
+ *
+ * @author Amel Aho
+ * @version 07.06.2024
+ */
 public abstract class Weg extends Line {
     private boolean horizontal = false;
     private final double startX;
@@ -12,7 +18,14 @@ public abstract class Weg extends Line {
     private final Color farbe;
     private final int schritt;
 
-    Weg(Punkt start, Zwischenpunkt ende, Color farbe, int schritt){
+    /**
+     * Konstruktor für den ersten Vertikalen weg.
+     *
+     * @param start Startpunkt
+     * @param ende  End-zwischenpunkt
+     * @param farbe Farbe vom Weg
+     */
+    Weg(Punkt start, Zwischenpunkt ende, Color farbe) {
         super(start.getXPos(), start.getYPos(), start.getXPos(), ende.getYPos());
         super.setStroke(farbe);
         super.setStrokeWidth(2);
@@ -21,10 +34,18 @@ public abstract class Weg extends Line {
         this.endeX = ende.getXPos();
         this.endeY = ende.getXPos();
         this.farbe = farbe;
-        this.schritt = schritt;
+        this.schritt = 0;
     }
 
-    Weg(Punkt start, Zwischenpunkt ende, Color farbe, boolean horizontal, int schritt){
+    /**
+     * Konstruktor für den ersten horizontalen weg.
+     *
+     * @param start      Startpunkt
+     * @param ende       End-zwischenpunkt
+     * @param farbe      Farbe vom Weg
+     * @param horizontal richtung vom Weg
+     */
+    Weg(Punkt start, Zwischenpunkt ende, Color farbe, boolean horizontal){
         super(start.getXPos(), ende.getYPos(), ende.getXPos(), ende.getYPos());
         super.setStroke(farbe);
         super.setStrokeWidth(2);
@@ -34,10 +55,17 @@ public abstract class Weg extends Line {
         this.endeX = ende.getXPos();
         this.endeY = ende.getXPos();
         this.farbe = farbe;
-        this.schritt = schritt;
+        this.schritt = 1;
     }
 
-    Weg(Zwischenpunkt start, Punkt ende, Color farbe, int schritt){
+    /**
+     * Konstruktor für den zweiten Vertikalen weg.
+     *
+     * @param start Start-zwischenpunkt
+     * @param ende  Endpunkt
+     * @param farbe Farbe vom Weg
+     */
+    Weg(Zwischenpunkt start, Punkt ende, Color farbe){
         super(start.getXPos(), start.getYPos(), start.getXPos(), ende.getYPos());
         super.setStroke(farbe);
         super.setStrokeWidth(2);
@@ -46,10 +74,18 @@ public abstract class Weg extends Line {
         this.endeX = ende.getXPos();
         this.endeY = ende.getXPos();
         this.farbe = farbe;
-        this.schritt = schritt;
+        this.schritt = 2;
     }
 
-    Weg(Zwischenpunkt start, Punkt ende, Color farbe, boolean horizontal, int schritt){
+    /**
+     * Konstruktor für den zweiten horizontalen weg.
+     *
+     * @param start      Start-zwischenpunkt
+     * @param ende       Endpunkt
+     * @param farbe      Farbe vom Weg
+     * @param horizontal richtung vom Weg
+     */
+    Weg(Zwischenpunkt start, Punkt ende, Color farbe, boolean horizontal){
         super(start.getXPos(), ende.getYPos(), ende.getXPos(), ende.getYPos());
         super.setStroke(farbe);
         super.setStrokeWidth(2);
@@ -59,7 +95,7 @@ public abstract class Weg extends Line {
         this.endeX = ende.getXPos();
         this.endeY = ende.getXPos();
         this.farbe = farbe;
-        this.schritt = schritt;
+        this.schritt = 3;
     }
 
     Weg(Bahnhof start, Bahnhof ende, Color farbe, int schritt){
@@ -72,6 +108,11 @@ public abstract class Weg extends Line {
         this.schritt = schritt;
     }
 
+    /**
+     * Gibt alle Instanzvariablen als String aus
+     *
+     * @return String mit Daten vom Parkhaus
+     */
     @Override
     public String toString(){
         return "Weg[" + "StartX=" + startX +
@@ -85,8 +126,9 @@ public abstract class Weg extends Line {
     }
 
     /**
+     * Gibt alle Instanzvariablen als String aus
      *
-     * @param datentyp Ob es eine Stasze, Buslinie oder Schiene ist.
+     * @param datentyp Ob es eine Straße, Buslinie oder Schiene sind.
      * @return Daten vom Objekt als String.
      */
     public String toString(String datentyp){

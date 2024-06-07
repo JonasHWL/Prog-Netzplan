@@ -1,20 +1,20 @@
 package com.example.line;
 
-public class Buslinie extends Strasze{
-    Buslinie(Punkt start, Zwischenpunkt ende, int schritt) {
-        super(start, ende, schritt);
+public class Buslinie extends Straße {
+    Buslinie(Punkt start, Zwischenpunkt ende) {
+        super(start, ende);
     }
 
-    Buslinie(Punkt start, Zwischenpunkt ende, boolean horizontal, int schritt) {
-        super(start, ende, horizontal, schritt);
+    Buslinie(Punkt start, Zwischenpunkt ende, boolean horizontal) {
+        super(start, ende, horizontal);
     }
 
-    Buslinie(Zwischenpunkt start, Punkt ende, int schritt) {
-        super(start, ende, schritt);
+    Buslinie(Zwischenpunkt start, Punkt ende) {
+        super(start, ende);
     }
 
-    Buslinie(Zwischenpunkt start, Punkt ende, boolean horizontal, int schritt) {
-        super(start, ende, horizontal, schritt);
+    Buslinie(Zwischenpunkt start, Punkt ende, boolean horizontal) {
+        super(start, ende, horizontal);
     }
 
     @Override

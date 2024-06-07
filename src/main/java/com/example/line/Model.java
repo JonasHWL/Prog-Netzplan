@@ -1,13 +1,18 @@
 package com.example.line;
 
 import javafx.scene.layout.Pane;
-
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Erstellt die verschiedene Punkte und dazugehörigen Wege die dargestellt werden sollen.
+ *
+ * @author Amel Aho
+ * @version 07.06.2024
+ */
 public class Model {
     private final long seed;
     private final Random rand;
@@ -21,7 +26,7 @@ public class Model {
     /**
      * Konstruktor für das Model.
      * @param root Das Fenster Objekt
-     * @param seed Seed für die Zufallsgeneration der Punkte
+     * @param seed Seed für die Zufallsgeneration der Punkte.
      * @param anzahlParkhaus Anzahl der zu erstellenden Punkte
      * @param anzahlBushaltestellen Anzahl der zu erstellenden Punkte
      * @param anzahlBahnhof Anzahl der zu erstellenden Punkte
@@ -29,6 +34,7 @@ public class Model {
     Model(Pane root, long seed, int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof){
         this.seed = seed;
         this.rand = new Random(seed);
+        //TODO Die anzahl Parameter vom Konstruktor zu einer Methode verschieben.
         this.anzahlParkhaus = anzahlParkhaus;
         this.anzahlBushaltestellen = anzahlBushaltestellen;
         this.anzahlBahnhof = anzahlBahnhof;
@@ -38,15 +44,19 @@ public class Model {
         benutzerDefinierterPunkt(14,14,"Custom2", 'p');
         benutzerDefinierterPunkt(6,10,"Custom3", 'p');
 
+        //TODO folgende 3 Methoden in einer Methode einbauen die von Controller aufgerufen wird, für die ganze generation.
         generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
-        erstelleStraszen(punkte);
+        erstelleStraßen();
         zeichne(root);
 
+        //Methode soll vom Controller aufgerufen werden!
         export();
     }
 
     /**
      * Generiert zufällig punkte anhand des Seeds.
+     * Es werden zuerst die Benutzer definierten Punkte gezählt und dann die restlichen nachgefüllt.
+     * Bahnhof und Bushaltestellen sind, extra aufgaben.
      *
      * @param anzahlParkhaus Anzahl der zu erstellenden Punkte
      * @param anzahlBushaltestellen Anzahl der zu erstellenden Punkte
@@ -59,56 +69,62 @@ public class Model {
             punkte.add(new Parkhaus(xPos*40, yPos*40, "Parkhaus"));
         }
 
+        //Generation für Bushaltestellen muss angepasst werden (Extra aufgabe)
         for (int i = 0; i < anzahlBushaltestellen; i++){
             int randPostion = rand.nextInt(0,  punkte.size());
             punkte.set(randPostion, new Bushaltestelle(punkte.get(randPostion).getXPos(), punkte.get(randPostion).getYPos(), "Bus"));
         }
 
+        //Generation für Bahnhof muss angepasst werden (Extra aufgabe)
         for (int i = 0; i < anzahlBahnhof; i++){
             int xPos = rand.nextInt(1, 20);
             int yPos = rand.nextInt(1,20);
-            punkte.add(new Bahnhof(xPos*20, yPos*20, "Parkhaus"));
+            punkte.add(new Bahnhof(xPos * 20, yPos * 20, "Bahnhof"));
         }
     }
 
     /**
      * Erstellt Wege passend zu allen Punkten die erstellt wurden.
-     * Nach Aufruf dieser Methode können keine weiteren Punkte erstellt werden!
-     *
-     * @param punkte Arraylist mit Punkte objekte zwischen dem die Linien generiert werden.
+     * Nach Aufruf dieser Methode sollten keine weiteren Punkte erstellt werden!
      */
-    private void erstelleStraszen(ArrayList<Punkt> punkte){
+    private void erstelleStraßen() {
+        //Durchgehen des punkte Array.
         for (int i = 0; i < punkte.size(); i++) {
-            // Current point A
+            //Kontrolliert den Datentyp von punkt i, ob es ein Parkhaus ist und speichert es ab in der Variable aktuell.
             if(punkte.get(i) instanceof Parkhaus aktuell){
-                // Next point B, check if the aktuell element is the last to loop back to the first
-                Parkhaus naechste;
+                //Der nächste Punkt wird genommen und in einer Variable gespeichert.
+                //Wenn Punkt aktuell der letzte un der liste ist und es kein i+1 gibt, dann wird das erste element ausgewählt.
+                Parkhaus nächste;
                 if (i + 1 < punkte.size()) {
-                    naechste = (Parkhaus) punkte.get(i + 1);
+                    nächste = (Parkhaus) punkte.get(i + 1);
                 } else {
-                    naechste = (Parkhaus) punkte.getFirst();
+                    nächste = (Parkhaus) punkte.getFirst();
                 }
 
-                Zwischenpunkt mittel = new Zwischenpunkt((aktuell.getXPos() + naechste.getXPos()) / 2, (aktuell.getYPos() + naechste.getYPos()) / 2, "Hallo");
+                //Zwischenpunkt als hilfe für die liniengeneration. Wird nicht abgespeichert.
+                Zwischenpunkt mittel = new Zwischenpunkt((aktuell.getXPos() + nächste.getXPos()) / 2, (aktuell.getYPos() + nächste.getYPos()) / 2, "Hallo");
 
+                //Initialisierung eines Weg Arraylist welches die 4 Wege speichert.
                 ArrayList<Weg> wege = new ArrayList<>();
 
+                //Erstellung der 4 Wege von punkt aktuell zu Punkt nächste, mithilfe überladene Konstruktoren.
                 for (int j = 0; j < 4; j++) {
                     switch (j) {
                         case 0:
-                            wege.add(new Strasze(aktuell,mittel, j));
+                            wege.add(new Straße(aktuell, mittel));
                             break;
                         case 1:
-                            wege.add(new Strasze(aktuell, mittel, true, j));
+                            wege.add(new Straße(aktuell, mittel, true));
                             break;
                         case 2:
-                            wege.add(new Strasze(mittel, naechste, j));
+                            wege.add(new Straße(mittel, nächste));
                             break;
                         case 3:
-                            wege.add(new Strasze(mittel, naechste, true, j));
+                            wege.add(new Straße(mittel, nächste, true));
                             break;
                     }
                 }
+                //Hinzufügen der 4 Wege in einem Array zur generellen Arraylist.
                 this.wege.add(wege);
             }
         }
@@ -148,6 +164,15 @@ public class Model {
         }
     }
 
+    /**
+     * Erstellt eine .txt Datei welche Informationen zur Generation der Karte mitgibt.
+     * Der Seed.
+     * Die Anzahl von Punkten.
+     * Es wird von jedem Punkt und Weg die toString methode aufgerufen, für die Instanzvariablen.
+     *
+     * @see Punkt
+     * @see Weg
+     */
     private void export(){
         try{
             File export = new File("karte.txt");
@@ -157,7 +182,6 @@ public class Model {
                 System.out.println("Datei existiert bereits!");
             }
         } catch (IOException e){
-            System.out.println("An error occurred.");
             throw new RuntimeException(e);
         }
 
@@ -176,7 +200,7 @@ public class Model {
                 }
             }
             schreiber.close();
-            System.out.println("Successfully wrote to the file.");
+            System.out.println("Erfolgreich die Daten exportiert");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
