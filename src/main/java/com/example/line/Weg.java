@@ -11,6 +11,7 @@ import javafx.scene.shape.Line;
  */
 public abstract class Weg extends Line {
     private boolean horizontal = false;
+    private boolean zuMitte = false;
     private final double startX;
     private final double startY;
     private final double endeX;
@@ -18,84 +19,44 @@ public abstract class Weg extends Line {
     private final Color farbe;
     private final int schritt;
 
-    /**
-     * Konstruktor für den ersten Vertikalen weg.
-     *
-     * @param start Startpunkt
-     * @param ende  End-zwischenpunkt
-     * @param farbe Farbe vom Weg
-     */
-    Weg(Punkt start, Zwischenpunkt ende, Color farbe) {
-        super(start.getXPos(), start.getYPos(), start.getXPos(), ende.getYPos());
-        super.setStroke(farbe);
-        super.setStrokeWidth(2);
-        this.startX = start.getXPos();
-        this.startY = start.getYPos();
-        this.endeX = ende.getXPos();
-        this.endeY = ende.getXPos();
-        this.farbe = farbe;
-        this.schritt = 0;
-    }
+    Weg(Punkt start, Punkt ende, Zwischenpunkt mitte, Color farbe, boolean horizontal, boolean zuMitte, int schritt) {
+        super(
+                zuMitte ? //Für Line StartX
+                        start.getXPos() : //zuMitte true
+                        mitte.getXPos(), //zuMitte false
 
-    /**
-     * Konstruktor für den ersten horizontalen weg.
-     *
-     * @param start      Startpunkt
-     * @param ende       End-zwischenpunkt
-     * @param farbe      Farbe vom Weg
-     * @param horizontal richtung vom Weg
-     */
-    Weg(Punkt start, Zwischenpunkt ende, Color farbe, boolean horizontal){
-        super(start.getXPos(), ende.getYPos(), ende.getXPos(), ende.getYPos());
-        super.setStroke(farbe);
-        super.setStrokeWidth(2);
+                horizontal ? //Fur Line StartY
+                        zuMitte ? //Horizontal true
+                                mitte.getYPos() : //zuMitte true
+                                ende.getYPos() //zzMitte false
+                        : zuMitte ? //Horizontal false
+                        start.getYPos() : //zuMitte true
+                        mitte.getYPos(), //zuMitte false
+
+                horizontal ? //Fur Line EndX
+                        zuMitte ? //Horizontal true
+                                mitte.getXPos() : //zuMitte true
+                                ende.getXPos() //zzMitte false
+                        : zuMitte ? //Horizontal false
+                        start.getXPos() : //zuMitte true
+                        mitte.getXPos(), //zuMitte false
+
+
+                zuMitte ? //Für Line EndY
+                        mitte.getYPos() : //zuMitte true
+                        ende.getYPos()//zuMitte false
+        );
+
+        this.startX = super.getStartX();
+        this.startY = super.getStartY();
+        this.endeX = super.getEndX();
+        this.endeY = super.getEndY();
+        this.farbe = farbe;
         this.horizontal = horizontal;
-        this.startX = start.getXPos();
-        this.startY = start.getYPos();
-        this.endeX = ende.getXPos();
-        this.endeY = ende.getXPos();
-        this.farbe = farbe;
-        this.schritt = 1;
-    }
-
-    /**
-     * Konstruktor für den zweiten Vertikalen weg.
-     *
-     * @param start Start-zwischenpunkt
-     * @param ende  Endpunkt
-     * @param farbe Farbe vom Weg
-     */
-    Weg(Zwischenpunkt start, Punkt ende, Color farbe){
-        super(start.getXPos(), start.getYPos(), start.getXPos(), ende.getYPos());
+        this.zuMitte = zuMitte;
+        this.schritt = schritt;
         super.setStroke(farbe);
         super.setStrokeWidth(2);
-        this.startX = start.getXPos();
-        this.startY = start.getYPos();
-        this.endeX = ende.getXPos();
-        this.endeY = ende.getXPos();
-        this.farbe = farbe;
-        this.schritt = 2;
-    }
-
-    /**
-     * Konstruktor für den zweiten horizontalen weg.
-     *
-     * @param start      Start-zwischenpunkt
-     * @param ende       Endpunkt
-     * @param farbe      Farbe vom Weg
-     * @param horizontal richtung vom Weg
-     */
-    Weg(Zwischenpunkt start, Punkt ende, Color farbe, boolean horizontal){
-        super(start.getXPos(), ende.getYPos(), ende.getXPos(), ende.getYPos());
-        super.setStroke(farbe);
-        super.setStrokeWidth(2);
-        this.horizontal = horizontal;
-        this.startX = start.getXPos();
-        this.startY = start.getYPos();
-        this.endeX = ende.getXPos();
-        this.endeY = ende.getXPos();
-        this.farbe = farbe;
-        this.schritt = 3;
     }
 
     Weg(Bahnhof start, Bahnhof ende, Color farbe, int schritt){
@@ -121,6 +82,7 @@ public abstract class Weg extends Line {
                 ", EndeY=" + endeY +
                 ", StrokeColor=" + farbe +
                 ", Horizontal=" + horizontal +
+                ", zuMitte=" + zuMitte +
                 ", Schritt=" + schritt +
                 "]";
     }
@@ -131,13 +93,14 @@ public abstract class Weg extends Line {
      * @param datentyp Ob es eine Straße, Buslinie oder Schiene sind.
      * @return Daten vom Objekt als String.
      */
-    public String toString(String datentyp){
+    public String toString(String datentyp) {
         return datentyp + "[" + "StartX=" + startX +
                 ", StartY=" + startY +
                 ", EndeX=" + endeX +
                 ", EndeY=" + endeY +
                 ", StrokeColor=" + farbe +
                 ", Horizontal=" + horizontal +
+                ", zuMitte=" + zuMitte +
                 ", Schritt=" + schritt +
                 "]";
     }

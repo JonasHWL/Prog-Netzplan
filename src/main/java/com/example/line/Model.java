@@ -109,20 +109,7 @@ public class Model {
 
                 //Erstellung der 4 Wege von punkt aktuell zu Punkt nächste, mithilfe überladene Konstruktoren.
                 for (int j = 0; j < 4; j++) {
-                    switch (j) {
-                        case 0:
-                            wege.add(new Straße(aktuell, mittel));
-                            break;
-                        case 1:
-                            wege.add(new Straße(aktuell, mittel, true));
-                            break;
-                        case 2:
-                            wege.add(new Straße(mittel, nächste));
-                            break;
-                        case 3:
-                            wege.add(new Straße(mittel, nächste, true));
-                            break;
-                    }
+                    wege.add(new Straße(aktuell, nächste, mittel, j % 2 != 0, j / 2 == 0, j));
                 }
                 //Hinzufügen der 4 Wege in einem Array zur generellen Arraylist.
                 this.wege.add(wege);
