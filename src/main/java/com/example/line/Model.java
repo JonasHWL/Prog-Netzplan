@@ -1,11 +1,14 @@
 package com.example.line;
 
 import javafx.scene.layout.Pane;
+
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * Erstellt die verschiedene Punkte und dazugehörigen Wege die dargestellt werden sollen.
@@ -51,6 +54,7 @@ public class Model {
 
         //Methode soll vom Controller aufgerufen werden!
         export();
+        importkarte();
     }
 
     /**
@@ -125,13 +129,13 @@ public class Model {
     private void zeichne(Pane root){
         for (ArrayList<Weg> wegeArr : wege) {
             for (Weg weg : wegeArr) {
-                System.out.println(weg.toString());
+                //System.out.println(weg.toString());
                 root.getChildren().addAll(weg);
             }
         }
 
         for (Punkt punkt : punkte) {
-            System.out.println(punkt.toString());
+            //System.out.println(punkt.toString());
             root.getChildren().addAll(punkt);
         }
     }
@@ -189,6 +193,50 @@ public class Model {
             schreiber.close();
             System.out.println("Erfolgreich die Daten exportiert");
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * sucht nach einer karte.txt datei und liest sie ab.
+     * Bisher werden die einzelnen Werte nur in der Konsole ausgegeben.
+     */
+    private void importkarte() {
+        try {
+            File karte = new File("karte.txt");
+            Scanner leser = new Scanner(karte);
+            while (leser.hasNextLine()) {
+                String zeile = leser.nextLine();
+                String search = "Seed=";
+                if (zeile.contains(search)) {
+                    zeile = zeile.substring(search.length());
+                    System.out.println("Importierter Seed=" + zeile);
+                }
+                search = "Parkhaus=";
+                if (zeile.contains(search)) {
+                    zeile = zeile.substring(search.length());
+                    System.out.println("Importierter Parkhaus=" + zeile);
+                }
+                search = "Bushaltestellen=";
+                if (zeile.contains(search)) {
+                    zeile = zeile.substring(search.length());
+                    System.out.println("Importierter Bushaltestellen=" + zeile);
+                }
+                search = "Bahnhof=";
+                if (zeile.contains(search)) {
+                    zeile = zeile.substring(search.length());
+                    System.out.println("Importierter Bahnhof=" + zeile);
+                }
+                search = "Parkhaus[";
+                if (zeile.contains(search)) {
+                    double xPos = Double.parseDouble(zeile.split("xPos=")[1].split(",")[0]);
+                    double yPos = Double.parseDouble(zeile.split("yPos=")[1].split(",")[0]);
+                    String name = zeile.split("farbeColor=")[1].split(",")[0];
+                    System.out.println(xPos + " " + yPos + " " + name);
+                }
+            }
+            leser.close();
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
