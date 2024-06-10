@@ -26,13 +26,14 @@ public class Controller {
     @FXML
     private AnchorPane anchorPane;
     //TODO instanzvariable Besser speichern.
-    Model model = new Model(anchorPane);
+    Model model; //= new Model(anchorPane);
 
     @FXML
     void Eline(ActionEvent event) {
         customButton.setDisable(true);
-        model.setRoot(anchorPane);
-        model.generiere(5, 0, 0);
+        model = new Model(anchorPane);
+        //model.setRoot(anchorPane);
+        //model.generiere(5, 0, 0);
         System.out.println("Generieren Knopf gedrückt und ausgeführt");
     }
 
