@@ -25,11 +25,15 @@ public class Controller {
 
     @FXML
     private AnchorPane anchorPane;
+    //TODO instanzvariable Besser speichern.
+    Model model = new Model(anchorPane);
 
     @FXML
     void Eline(ActionEvent event) {
         customButton.setDisable(true);
-        Model model = new Model(anchorPane, 9223372036854775807L, 5, 0, 0);
+        model.setRoot(anchorPane);
+        model.generiere(5, 0, 0);
+        System.out.println("Generieren Knopf gedrückt und ausgeführt");
     }
 
 
@@ -85,6 +89,7 @@ public class Controller {
 
             //hier werden die Pos1, Pos2 und der name in die ausgabe methode geschriebben.
             Uebergabe ue = new Uebergabe(p1, p2, n);
+            model.benutzerDefinierterPunkt(p1, p2, n, 'p');
             //Hier wird festgestellt in welcher Stage man sich grade befindet dafür guckt man wo das ActionEvent
             //ausgeführt wurde deswegen kann man das nicht in einer anderen Methode machen
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

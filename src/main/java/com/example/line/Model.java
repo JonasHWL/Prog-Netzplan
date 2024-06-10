@@ -17,7 +17,7 @@ import java.util.Scanner;
  * @version 07.06.2024
  */
 public class Model {
-    private final Pane root;
+    private Pane root;
     private long seed;
     private Random rand;
     private int anzahlParkhaus;
@@ -38,20 +38,20 @@ public class Model {
         this.rand = new Random(seed);
 
         //Methode soll vom Controller aufgerufen werden!
-        benutzerDefinierterPunkt(4, 4, "Custom", 'p');
-        benutzerDefinierterPunkt(14,14,"Custom2", 'p');
-        benutzerDefinierterPunkt(6,10,"Custom3", 'p');
+        //benutzerDefinierterPunkt(4, 4, "Custom", 'p');
+        //benutzerDefinierterPunkt(14,14,"Custom2", 'p');
+        //benutzerDefinierterPunkt(6,10,"Custom3", 'p');
 
         //Methode soll vom Controller aufgerufen werden!
-        generiere(5, 0, 0);
+        //generiere(5, 0, 0);
 
         //Methode soll vom Controller aufgerufen werden!
-        export();
+        //export();
         //Methode soll vom Controller aufgerufen werden!
-        importkarte();
+        //importkarte();
     }
 
-    private void generiere(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof) {
+    public void generiere(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof) {
         this.anzahlParkhaus = anzahlParkhaus;
         this.anzahlBushaltestellen = anzahlBushaltestellen;
         this.anzahlBahnhof = anzahlBahnhof;
@@ -72,6 +72,15 @@ public class Model {
     }
 
     /**
+     * Setter für root
+     *
+     * @param root Neuer Root.
+     */
+    public void setRoot(Pane root) {
+        this.root = root;
+    }
+
+    /**
      * Generiert zufällig punkte anhand des Seeds.
      * Es werden zuerst die Benutzer definierten Punkte gezählt und dann die restlichen nachgefüllt.
      * Bahnhof und Bushaltestellen sind, extra aufgaben.
@@ -80,8 +89,8 @@ public class Model {
      * @param anzahlBushaltestellen Anzahl der zu erstellenden Punkte
      * @param anzahlBahnhof Anzahl der zu erstellenden Punkte
      */
-    private void generierePunkte(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof){
-        while ( punkte.size() < anzahlParkhaus){
+    private void generierePunkte(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof) {
+        while (punkte.size() <= anzahlParkhaus){
             int xPos = rand.nextInt(1, 15);
             int yPos = rand.nextInt(1,15);
             punkte.add(new Parkhaus(xPos*40, yPos*40, "Parkhaus"));
@@ -165,7 +174,11 @@ public class Model {
             case 'b' -> punkte.add(new Bushaltestelle(xPos*40, yPos*40, name));
             case 'z' -> punkte.add(new Bahnhof(xPos*40, yPos*40, name));
         }
+
+        System.out.println("punkt erstellt");
     }
+
+
 
     /**
      * Erstellt eine .txt Datei welche Informationen zur Generation der Karte mitgibt.
