@@ -17,11 +17,12 @@ import java.util.Scanner;
  * @version 07.06.2024
  */
 public class Model {
-    private final long seed;
-    private final Random rand;
-    private final int anzahlParkhaus;
-    private final int anzahlBushaltestellen;
-    private final int anzahlBahnhof;
+    private final Pane root;
+    private long seed;
+    private Random rand;
+    private int anzahlParkhaus;
+    private int anzahlBushaltestellen;
+    private int anzahlBahnhof;
     private final ArrayList<Punkt> punkte = new ArrayList<>();
     //private ArrayList<Fahrzeug> fahrzeuge = new ArrayList<Fahrzeug>();
     private final ArrayList<ArrayList<Weg>> wege= new ArrayList<>();
@@ -29,32 +30,45 @@ public class Model {
     /**
      * Konstruktor für das Model.
      * @param root Das Fenster Objekt
-     * @param seed Seed für die Zufallsgeneration der Punkte.
-     * @param anzahlParkhaus Anzahl der zu erstellenden Punkte
-     * @param anzahlBushaltestellen Anzahl der zu erstellenden Punkte
-     * @param anzahlBahnhof Anzahl der zu erstellenden Punkte
      */
-    Model(Pane root, long seed, int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof){
-        this.seed = seed;
+    Model(Pane root) {
+        this.root = root;
+        //Default Seed
+        this.seed = 9223372036854775807L;
         this.rand = new Random(seed);
-        //TODO Die anzahl Parameter vom Konstruktor zu einer Methode verschieben.
-        this.anzahlParkhaus = anzahlParkhaus;
-        this.anzahlBushaltestellen = anzahlBushaltestellen;
-        this.anzahlBahnhof = anzahlBahnhof;
 
         //Methode soll vom Controller aufgerufen werden!
         benutzerDefinierterPunkt(4, 4, "Custom", 'p');
         benutzerDefinierterPunkt(14,14,"Custom2", 'p');
         benutzerDefinierterPunkt(6,10,"Custom3", 'p');
 
-        //TODO folgende 3 Methoden in einer Methode einbauen die von Controller aufgerufen wird, für die ganze generation.
-        generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
-        erstelleStraßen();
-        zeichne(root);
+        //Methode soll vom Controller aufgerufen werden!
+        generiere(5, 0, 0);
 
         //Methode soll vom Controller aufgerufen werden!
         export();
+        //Methode soll vom Controller aufgerufen werden!
         importkarte();
+    }
+
+    private void generiere(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof) {
+        this.anzahlParkhaus = anzahlParkhaus;
+        this.anzahlBushaltestellen = anzahlBushaltestellen;
+        this.anzahlBahnhof = anzahlBahnhof;
+
+        generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
+        erstelleStraßen();
+        zeichne();
+    }
+
+    /**
+     * Setter für seed
+     *
+     * @param seed Neuer Seed.
+     */
+    public void setSeed(long seed) {
+        this.seed = seed;
+        this.rand = new Random(seed);
     }
 
     /**
@@ -123,10 +137,8 @@ public class Model {
 
     /**
      * Geht durch die Arraylist durch, welche alle erstellten Objekte speichert.
-     *
-     * @param root Das Fenster Objekt
      */
-    private void zeichne(Pane root){
+    private void zeichne() {
         for (ArrayList<Weg> wegeArr : wege) {
             for (Weg weg : wegeArr) {
                 //System.out.println(weg.toString());
@@ -164,7 +176,7 @@ public class Model {
      * @see Punkt
      * @see Weg
      */
-    private void export(){
+    public void export() {
         try{
             File export = new File("karte.txt");
             if(export.createNewFile()){
@@ -201,7 +213,7 @@ public class Model {
      * sucht nach einer karte.txt datei und liest sie ab.
      * Bisher werden die einzelnen Werte nur in der Konsole ausgegeben.
      */
-    private void importkarte() {
+    public void importkarte() {
         try {
             File karte = new File("karte.txt");
             Scanner leser = new Scanner(karte);
