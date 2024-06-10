@@ -7,15 +7,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.scene.control.TextField;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LineController {
-
-    List<LineE> lines = new ArrayList<>();
 
     @FXML
     private AnchorPane anchorPane;
@@ -43,4 +40,27 @@ public class LineController {
             System.out.println("Fenster konnte nicht geladen werden");
         }
     }
+
+    @FXML
+    private TextField textField1;
+    @FXML
+    private TextField textField2;
+    @FXML
+    private TextField textField3;
+
+    int p1;
+    int p2;
+    String n;
+
+    @FXML
+    void Eingabe(ActionEvent event) {
+
+        p1 = Integer.parseInt(textField1.getText());
+        p2 = Integer.parseInt(textField2.getText());
+        n = textField3.getText();
+
+        Uebergabe ue = new Uebergabe(p1,p2,n);
+    }
+
+
 }

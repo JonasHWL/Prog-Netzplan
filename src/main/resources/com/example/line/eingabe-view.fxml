@@ -5,19 +5,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.line.LineController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/18.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.line.LineController">
     <top>
         <Label text="Label" BorderPane.alignment="CENTER" />
     </top>
     <bottom>
         <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" BorderPane.alignment="CENTER">
             <children>
-                <Button mnemonicParsing="false" text="Button" textAlignment="CENTER">
+                <Button mnemonicParsing="false" text="Abbrechen" textAlignment="CENTER">
                     <HBox.margin>
                         <Insets right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button mnemonicParsing="false" text="Button" textAlignment="CENTER">
+                <Button onAction="#Eingabe" mnemonicParsing="false" text="Eingabe" textAlignment="CENTER">
                     <HBox.margin>
                         <Insets top="10.0" />
                     </HBox.margin>
@@ -29,9 +29,9 @@
         </HBox>
     </bottom>
     <center>
-        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+        <VBox>
             <children>
-                <TextField fx:id="Pos1" prefHeight="25.0" prefWidth="269.0" promptText="Pos1">
+                <TextField fx:id="textField1" promptText="Pos2">
                     <VBox.margin>
                         <Insets top="40.0" />
                     </VBox.margin>
@@ -39,12 +39,12 @@
                         <Insets />
                     </opaqueInsets>
                 </TextField>
-                <TextField fx:id="Pos2" promptText="Pos2">
+                <TextField fx:id="textField2" promptText="Pos1">
                     <VBox.margin>
                         <Insets top="10.0" />
                     </VBox.margin>
                 </TextField>
-                <TextField fx:id="Name" prefHeight="25.0" prefWidth="260.0" promptText="Name">
+                <TextField fx:id="textField3" prefHeight="25.0" prefWidth="260.0" promptText="Name">
                     <VBox.margin>
                         <Insets top="10.0" />
                     </VBox.margin>
