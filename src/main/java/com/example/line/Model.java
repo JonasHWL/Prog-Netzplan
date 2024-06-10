@@ -231,7 +231,7 @@ public class Model {
                 if (zeile.contains(search)) {
                     double xPos = Double.parseDouble(zeile.split("xPos=")[1].split(",")[0]);
                     double yPos = Double.parseDouble(zeile.split("yPos=")[1].split(",")[0]);
-                    String name = zeile.split("farbeColor=")[1].split(",")[0];
+                    String name = zeile.split("farbeColor=")[1].split("]")[0];
                     System.out.println(xPos + " " + yPos + " " + name);
                 }
             }
