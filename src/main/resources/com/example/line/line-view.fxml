@@ -13,7 +13,7 @@
         <?import javafx.scene.text.Font?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/18.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.line.LineController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/18.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.line.Controller">
 <center>
     <AnchorPane fx:id="anchorPane" prefHeight="435.0" prefWidth="649.0" BorderPane.alignment="CENTER" />
 </center>
@@ -42,7 +42,7 @@
                     <Insets />
                 </opaqueInsets>
             </Button>
-            <Button onAction="#Test" minWidth="27.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="Custom">
+            <Button onAction="#Custom" fx:id="customButton" minWidth="27.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="Custom">
                 <HBox.margin>
                     <Insets right="400.0" top="40.0" />
                 </HBox.margin>
