@@ -15,7 +15,7 @@ import java.util.Scanner;
  * Erstellt die verschiedene Punkte und dazugehörigen Wege die dargestellt werden sollen.
  *
  * @author Amel Aho
- * @version 07.06.2024
+ * @version 11.06.2024
  */
 public class Model {
     private Pane root;
@@ -35,24 +35,22 @@ public class Model {
         this.seed = 9223372036854775807L;
         this.rand = new Random(seed);
 
-        //Methode soll vom Controller aufgerufen werden!
+        //TODO Diese Methoden entfernen wenn Model model richtig gespeichert wird.
+        /*
         benutzerDefinierterPunkt(4, 4, "Custom", 'p');
         benutzerDefinierterPunkt(14, 14, "Custom2", 'p');
         benutzerDefinierterPunkt(6, 10, "Custom3", 'p');
 
-        //Methode soll vom Controller aufgerufen werden!
         generiere(5, 0, 0);
 
-        //Methode soll vom Controller aufgerufen werden!
         export();
-        //Methode soll vom Controller aufgerufen werden!
-        importKarte();
+
+        importKarte(); */
     }
 
     public void generiere(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof) {
         generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
         erstelleStraßen();
-        zeichne();
     }
 
     /**
@@ -92,14 +90,15 @@ public class Model {
 
         //Generation für Bushaltestellen muss angepasst werden (Extra aufgabe)
         for (int i = 0; i < anzahlBushaltestellen; i++){
-            int randPostion = rand.nextInt(0,  punkte.size());
-            punkte.set(randPostion, new Bushaltestelle(punkte.get(randPostion).getXPos(), punkte.get(randPostion).getYPos(), "Bus"));
+            int xPos = rand.nextInt(1, 15);
+            int yPos = rand.nextInt(1,15);
+            punkte.add(new Bushaltestelle(xPos * 20, yPos * 20, "Bushaltestelle"));
         }
 
         //Generation für Bahnhof muss angepasst werden (Extra aufgabe)
         for (int i = 0; i < anzahlBahnhof; i++){
-            int xPos = rand.nextInt(1, 20);
-            int yPos = rand.nextInt(1,20);
+            int xPos = rand.nextInt(1, 15);
+            int yPos = rand.nextInt(1,15);
             punkte.add(new Bahnhof(xPos * 20, yPos * 20, "Bahnhof"));
         }
     }
@@ -136,12 +135,8 @@ public class Model {
                 this.wege.add(wege);
             }
         }
-    }
 
-    /**
-     * Geht durch die Arraylist durch, welche alle erstellten Objekte speichert.
-     */
-    private void zeichne() {
+        //Zeichnen der Wege und Punkte
         for (ArrayList<Weg> wegeArr : wege) {
             for (Weg weg : wegeArr) {
                 //System.out.println(weg.toString());
@@ -168,8 +163,6 @@ public class Model {
             case 'b' -> punkte.add(new Bushaltestelle(xPos*40, yPos*40, name));
             case 'z' -> punkte.add(new Bahnhof(xPos*40, yPos*40, name));
         }
-
-        System.out.println("punkt erstellt");
     }
 
 
@@ -210,6 +203,7 @@ public class Model {
     /**
      * sucht nach einer karte.txt datei und liest sie ab.
      * Bisher werden die einzelnen Werte nur in der Konsole ausgegeben.
+     * Muss so behandelt werden wie der Generieren-Knopf.
      */
     public void importKarte() {
         try {
@@ -220,34 +214,29 @@ public class Model {
                 String search = "Seed=";
                 if (zeile.contains(search)) {
                     zeile = zeile.substring(search.length());
-                    System.out.println("Importierter Seed=" + zeile);
                     seed = Long.parseLong(zeile);
                 }
-                search = "Parkhaus[";
-                searchImport(zeile, search, "Parkhaus");
-                search = "Bushaltestelle[";
-                searchImport(zeile, search, "Bushaltestelle");
-                search = "Bahnhof[";
-                searchImport(zeile, search, "Bahnhof");
+                searchImport(zeile, "Parkhaus");
+                searchImport(zeile, "Bushaltestelle");
+                searchImport(zeile, "Bahnhof");
             }
             leser.close();
+            erstelleStraßen();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-
-        System.out.println("Print vom punkte Array. Die Elemente sollen sich dupliziert haben");
-        for (Punkt punkt : punkte) {
-            System.out.println(punkt.toString());
-        }
     }
 
-    private void searchImport(String zeile, String search, String datentyp) {
-        if (zeile.contains(search)) {
+    /**
+     * Wiederholender Codeblock in eine Methode zusammengefasst.
+     * @param zeile Die zeile wo der Leser ist.
+     * @param datentyp Nach welchen Datentyp gesucht wird.
+     */
+    private void searchImport(String zeile, String datentyp) {
+        if (zeile.contains(datentyp + "[")) {
             double xPos = Double.parseDouble(zeile.split("xPos=")[1].split(",")[0]);
             double yPos = Double.parseDouble(zeile.split("yPos=")[1].split(",")[0]);
             String name = zeile.split("name=")[1].split(",")[0];
-            String farbe = zeile.split("farbeColor=")[1].split("]")[0];
-            System.out.println(xPos + " " + yPos + " " + name + " " + farbe);
 
             if (Objects.equals(datentyp, "Parkhaus")) {
                 punkte.add(new Parkhaus(xPos, yPos, name));

@@ -32,6 +32,7 @@ public class Controller {
     void Eline(ActionEvent event) {
         customButton.setDisable(true);
         model = new Model(anchorPane);
+        //TODO mit anchorPane/root besser umgehen.
         //model.setRoot(anchorPane);
         //model.generiere(5, 0, 0);
         System.out.println("Generieren Knopf gedrückt und ausgeführt");
