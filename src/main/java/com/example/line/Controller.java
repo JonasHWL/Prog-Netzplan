@@ -156,5 +156,4 @@ public class Controller {
     public void Import(ActionEvent event) {
         model.importKarte();
     }
-
 }
