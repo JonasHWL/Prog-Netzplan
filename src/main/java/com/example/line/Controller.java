@@ -117,6 +117,7 @@ public class Controller {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         //aufruf der beenden Methode die die stage auf der man sich befindet beendet
         beenden(stage);
+        System.out.println("Test");
     }
 
     @FXML
@@ -124,10 +125,9 @@ public class Controller {
         if(stage != null)
             stage.close();
     }
-
     /*
-        ---------   Menubar     --------
-     */
+    ---------   Menubar     --------
+ */
     // Erstellung einer Hilfe alert box, um den grundaufbau zu erklären es
     //         !!!!!! fehlen noch weitere Informationen !!!!!!
     @FXML
@@ -156,4 +156,5 @@ public class Controller {
     public void Import(ActionEvent event) {
         model.importKarte();
     }
+
 }
