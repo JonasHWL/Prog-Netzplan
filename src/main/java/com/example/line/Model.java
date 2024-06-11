@@ -28,7 +28,7 @@ public class Model {
     /**
      * Konstruktor für das Model.
      */
-    Model() {
+    private Model() {
         //Default Seed
         this.seed = 9223372036854775807L;
         this.rand = new Random(seed);
