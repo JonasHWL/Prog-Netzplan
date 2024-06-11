@@ -18,23 +18,23 @@ import java.io.IOException;
 public class Controller {
 
 
-
+    @FXML
+    void initialize() {
+        model = Model.getInstance();
+    }
 
     @FXML
     public Button customButton;
 
     @FXML
     private AnchorPane anchorPane;
-    //TODO instanzvariable Besser speichern.
-    Model model; //= new Model(anchorPane);
+
+    Model model;
 
     @FXML
     void Eline(ActionEvent event) {
         customButton.setDisable(true);
-        model = new Model(anchorPane);
-        //TODO mit anchorPane/root besser umgehen.
-        //model.setRoot(anchorPane);
-        //model.generiere(5, 0, 0);
+        model.generiere(anchorPane, 5, 0, 0);
         System.out.println("Generieren Knopf gedrückt und ausgeführt");
     }
 

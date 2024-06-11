@@ -18,7 +18,7 @@ import java.util.Scanner;
  * @version 11.06.2024
  */
 public class Model {
-    private Pane root;
+    private static Model instance;
     private long seed;
     private Random rand;
     private final ArrayList<Punkt> punkte = new ArrayList<>();
@@ -27,30 +27,42 @@ public class Model {
 
     /**
      * Konstruktor für das Model.
-     * @param root Das Fenster Objekt
      */
-    Model(Pane root) {
-        this.root = root;
+    Model() {
         //Default Seed
         this.seed = 9223372036854775807L;
         this.rand = new Random(seed);
 
-        //TODO Diese Methoden entfernen wenn Model model richtig gespeichert wird.
         /*
-        benutzerDefinierterPunkt(4, 4, "Custom", 'p');
-        benutzerDefinierterPunkt(14, 14, "Custom2", 'p');
-        benutzerDefinierterPunkt(6, 10, "Custom3", 'p');
-
-        generiere(5, 0, 0);
-
-        export();
-
-        importKarte(); */
+        4 4 cus1
+        14 14 cus2
+        6 10 cus3
+        */
     }
 
-    public void generiere(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof) {
+    /**
+     * Gibt die aktuelle Instanz vom Model Objekt
+     * @return Das model Objekt
+     */
+    public static Model getInstance(){
+        if (instance == null){
+            instance = new Model();
+        }
+        return instance;
+    }
+
+    /**
+     * Erstellt die fehlenden Punkte und generiert die Wege.
+     * Zeichnet die Wege und Punkte.
+     *
+     * @param root Das Fenster selbst anchorPane
+     * @param anzahlParkhaus Anzahl der Parkhäuser
+     * @param anzahlBushaltestellen Anzahl der Bushaltestellen
+     * @param anzahlBahnhof Anzahl der Bahnhöfe
+     */
+    public void generiere(Pane root ,int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof) {
         generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
-        erstelleStraßen();
+        erstelleStraßen(root);
     }
 
     /**
@@ -61,15 +73,6 @@ public class Model {
     public void setSeed(long seed) {
         this.seed = seed;
         this.rand = new Random(seed);
-    }
-
-    /**
-     * Setter für root
-     *
-     * @param root Neuer Root.
-     */
-    public void setRoot(Pane root) {
-        this.root = root;
     }
 
     /**
@@ -106,8 +109,10 @@ public class Model {
     /**
      * Erstellt Wege passend zu allen Punkten die erstellt wurden.
      * Nach Aufruf dieser Methode sollten keine weiteren Punkte erstellt werden!
+     *
+     * @param root Das Fenster selbst anchorPane
      */
-    private void erstelleStraßen() {
+    private void erstelleStraßen(Pane root) {
         //Durchgehen des punkte Array.
         for (int i = 0; i < punkte.size(); i++) {
             //Kontrolliert den Datentyp von punkt i, ob es ein Parkhaus ist und speichert es ab in der Variable aktuell.
@@ -204,8 +209,10 @@ public class Model {
      * sucht nach einer karte.txt datei und liest sie ab.
      * Bisher werden die einzelnen Werte nur in der Konsole ausgegeben.
      * Muss so behandelt werden wie der Generieren-Knopf.
+     *
+     * @param root Das Fenster selbst anchorPane
      */
-    public void importKarte() {
+    public void importKarte(Pane root) {
         try {
             File karte = new File("karte.txt");
             Scanner leser = new Scanner(karte);
@@ -221,7 +228,7 @@ public class Model {
                 searchImport(zeile, "Bahnhof");
             }
             leser.close();
-            erstelleStraßen();
+            erstelleStraßen(root);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
