@@ -81,9 +81,9 @@ public class Model {
      *
      * @param anzahlParkhaus Anzahl der zu erstellenden Punkte
      * @param anzahlBushaltestellen Anzahl der zu erstellenden Punkte
-     * @param anzahlBahnhof Anzahl der zu erstellenden Punkte
+     * @param anzahlBahnhöfe Anzahl der zu erstellenden Punkte
      */
-    private void generierePunkte(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof) {
+    private void generierePunkte(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhöfe) {
 
         while (koordinaten.size() < anzahlParkhaus) {
             int xPos = rand.nextInt(1, 15);
@@ -105,10 +105,13 @@ public class Model {
         }
 
         //Generation für Bahnhof
-        for (int i = 0; i < anzahlBahnhof; i++){
+        while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen+anzahlBahnhöfe){
             int xPos = rand.nextInt(1, 15);
             int yPos = rand.nextInt(1,15);
-            bahnhöfe.add(new Bahnhof(xPos * 40, yPos * 40));
+            if(!koordinaten.contains(String.valueOf(yPos + xPos))){
+                koordinaten.add(String.valueOf(yPos + xPos));
+                bahnhöfe.add(new Bahnhof(xPos*40, yPos*40));
+            }
         }
     }
 
@@ -199,7 +202,7 @@ public class Model {
             case 'z' :
                 if(!koordinaten.contains(String.valueOf(xPos + yPos))){
                     koordinaten.add(String.valueOf(xPos + yPos));
-                    punkte.add(new Bahnhof(xPos*40, yPos*40));
+                    bahnhöfe.add(new Bahnhof(xPos*40, yPos*40));
                 } else {
                     throw new PunktExistiertBereitsException("Diese Koordinaten sind belegt!");
                 }
