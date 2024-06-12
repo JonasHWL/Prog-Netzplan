@@ -34,7 +34,7 @@ public class Controller {
     @FXML
     void Eline(ActionEvent event) {
         customButton.setDisable(true);
-        model.generiere(anchorPane, 5, 0, 0);
+        model.generiere(anchorPane, 5, 2, 0);
         System.out.println("Generieren Knopf gedrückt und ausgeführt");
         model.export();
     }
@@ -92,7 +92,12 @@ public class Controller {
 
             //hier werden die Pos1, Pos2 und der name in die ausgabe methode geschriebben.
             Uebergabe ue = new Uebergabe(p1, p2, n);
-            model.benutzerDefinierterPunkt(p1, p2, n, 'p');
+            try {
+                model.benutzerDefinierterPunkt(p1, p2, 'p');
+            } catch (PunktExistiertBereitsException e) {
+                Error.setText(e.getMessage());
+                throw new RuntimeException(e);
+            }
             //Hier wird festgestellt in welcher Stage man sich grade befindet dafür guckt man wo das ActionEvent
             //ausgeführt wurde deswegen kann man das nicht in einer anderen Methode machen
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
