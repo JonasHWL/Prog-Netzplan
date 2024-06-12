@@ -1,6 +1,0 @@
-Seed=9223372036854775807
-Parkhaus[xPos=160.0, yPos=160.0, name=Custom, farbeColor=0xff0000ff]
-Parkhaus[xPos=560.0, yPos=560.0, name=Custom2, farbeColor=0xff0000ff]
-Parkhaus[xPos=240.0, yPos=400.0, name=Custom3, farbeColor=0xff0000ff]
-Parkhaus[xPos=160.0, yPos=560.0, name=Parkhaus, farbeColor=0xff0000ff]
-Parkhaus[xPos=480.0, yPos=560.0, name=Parkhaus, farbeColor=0xff0000ff]
