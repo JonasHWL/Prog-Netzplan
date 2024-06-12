@@ -235,6 +235,9 @@ public class Model {
             for (Punkt punkt : punkte) {
                 schreiber.write(punkt.toString() +"\n");
             }
+            for (Bahnhof bahnhof : bahnhöfe){
+                schreiber.write(bahnhof.toString() +"\n");
+            }
             schreiber.close();
             System.out.println("Erfolgreich die Daten exportiert");
         } catch (IOException e) {
