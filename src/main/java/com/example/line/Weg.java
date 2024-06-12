@@ -90,7 +90,7 @@ public abstract class Weg extends Line {
     /**
      * Gibt alle Instanzvariablen als String aus
      *
-     * @param datentyp Ob es eine Straße, Buslinie oder Schiene sind.
+     * @param datentyp Ob es eine Straße oder Schiene ist.
      * @return Daten vom Objekt als String.
      */
     public String toString(String datentyp) {
