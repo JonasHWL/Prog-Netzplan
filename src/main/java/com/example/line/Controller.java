@@ -36,6 +36,7 @@ public class Controller {
         customButton.setDisable(true);
         model.generiere(anchorPane, 5, 0, 0);
         System.out.println("Generieren Knopf gedrückt und ausgeführt");
+        model.export();
     }
 
 
