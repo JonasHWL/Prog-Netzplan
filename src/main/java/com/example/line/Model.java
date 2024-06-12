@@ -19,6 +19,7 @@ public class Model {
     private long seed;
     private Random rand;
     private final ArrayList<Punkt> punkte = new ArrayList<>();
+    private final ArrayList<Bahnhof> bahnhöfe = new ArrayList<>();
     private final HashSet<String> koordinaten= new HashSet<>();
     //private ArrayList<Fahrzeug> fahrzeuge = new ArrayList<Fahrzeug>();
     private final ArrayList<ArrayList<Weg>> wege= new ArrayList<>();
@@ -93,7 +94,7 @@ public class Model {
             }
         }
 
-        //Generation für Bushaltestellen muss angepasst werden (Extra aufgabe)
+        //Generation für Bushaltestellen muss angepasst werden
         while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen){
             int xPos = rand.nextInt(1, 15);
             int yPos = rand.nextInt(1,15);
@@ -103,11 +104,11 @@ public class Model {
             }
         }
 
-        //Generation für Bahnhof muss angepasst werden (Extra aufgabe)
+        //Generation für Bahnhof muss angepasst werden
         for (int i = 0; i < anzahlBahnhof; i++){
             int xPos = rand.nextInt(1, 15);
             int yPos = rand.nextInt(1,15);
-            punkte.add(new Bahnhof(xPos * 20, yPos * 20));
+            bahnhöfe.add(new Bahnhof(xPos * 40, yPos * 40));
         }
     }
 
@@ -144,6 +145,20 @@ public class Model {
             this.wege.add(wege);
         }
 
+        //Durchgehen vom Bahnhöfe array
+        for (int i = 0; i < bahnhöfe.size(); i++) {
+            Bahnhof aktuell = bahnhöfe.get(i);
+            Bahnhof nächste;
+            if (i + 1 < bahnhöfe.size() ) {
+                nächste = bahnhöfe.get(i + 1);
+            } else {
+                nächste = bahnhöfe.getFirst();
+            }
+            ArrayList<Weg> wege = new ArrayList<>();
+            wege.add(new Schiene(aktuell, nächste));
+            this.wege.add(wege);
+        }
+
         //Zeichnen der Wege und Punkte
         for (ArrayList<Weg> wegeArr : wege) {
             for (Weg weg : wegeArr) {
@@ -153,6 +168,7 @@ public class Model {
         }
 
         root.getChildren().addAll(punkte);
+        root.getChildren().addAll(bahnhöfe);
     }
 
     /**

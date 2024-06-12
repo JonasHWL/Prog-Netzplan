@@ -59,14 +59,16 @@ public abstract class Weg extends Line {
         super.setStrokeWidth(2);
     }
 
-    Weg(Bahnhof start, Bahnhof ende, Color farbe, int schritt){
-        super(start.getXPos(), start.getYPos(), start.getXPos(), ende.getYPos());
+    Weg(Bahnhof start, Bahnhof ende, Color farbe){
+        super(start.getXPos(), start.getYPos(), ende.getXPos(), ende.getYPos());
         this.startX = start.getXPos();
         this.startY = start.getYPos();
         this.endeX = ende.getXPos();
         this.endeY = ende.getXPos();
         this.farbe = farbe;
-        this.schritt = schritt;
+        this.schritt = 0;
+        super.setStroke(farbe);
+        super.setStrokeWidth(2);
     }
 
     /**

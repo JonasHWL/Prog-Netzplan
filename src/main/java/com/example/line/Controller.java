@@ -34,7 +34,7 @@ public class Controller {
     @FXML
     void Eline(ActionEvent event) {
         customButton.setDisable(true);
-        model.generiere(anchorPane, 5, 2, 0);
+        model.generiere(anchorPane, 5, 2, 3);
         System.out.println("Generieren Knopf gedrückt und ausgeführt");
         model.export();
     }
