@@ -94,14 +94,13 @@ public class Model {
         }
 
         //Generation für Bushaltestellen muss angepasst werden (Extra aufgabe)
-        while (koordinaten.size() < anzahlParkhaus-anzahlBushaltestellen){
+        while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen){
             int xPos = rand.nextInt(1, 15);
             int yPos = rand.nextInt(1,15);
             if(!koordinaten.contains(String.valueOf(yPos + xPos))){
                 koordinaten.add(String.valueOf(yPos + xPos));
                 punkte.add(rand.nextInt(0, punkte.size()), new Bushaltestelle(xPos * 40, yPos * 40));
             }
-
         }
 
         //Generation für Bahnhof muss angepasst werden (Extra aufgabe)
@@ -121,58 +120,28 @@ public class Model {
     private void erstelleStraßen(Pane root) {
         //Durchgehen des punkte Array.
         for (int i = 0; i < punkte.size(); i++) {
-            //Kontrolliert den Datentyp von punkt i, ob es ein Parkhaus ist und speichert es ab in der Variable aktuell.
-            if(punkte.get(i) instanceof Parkhaus aktuell){
-                //Der nächste Punkt wird genommen und in einer Variable gespeichert.
-                //Wenn Punkt aktuell der letzte un der liste ist und es kein i+1 gibt, dann wird das erste element ausgewählt.
-                Parkhaus nächste;
-                if (i + 1 < punkte.size()) {
-                    nächste = (Parkhaus) punkte.get(i + 1);
-                } else {
-                    nächste = (Parkhaus) punkte.getFirst();
-                }
-
-                //Zwischenpunkt als hilfe für die liniengeneration. Wird nicht abgespeichert.
-                Zwischenpunkt mittel = new Zwischenpunkt((aktuell.getXPos() + nächste.getXPos()) / 2, (aktuell.getYPos() + nächste.getYPos()) / 2, "Hallo");
-
-                //Initialisierung eines Weg Arraylist welches die 4 Wege speichert.
-                ArrayList<Weg> wege = new ArrayList<>();
-
-                //Erstellung der 4 Wege von punkt aktuell zu Punkt nächste, mithilfe überladene Konstruktoren.
-                for (int j = 0; j < 4; j++) {
-                    wege.add(new Straße(aktuell, nächste, mittel, j % 2 != 0, j / 2 == 0, j));
-                }
-                //Hinzufügen der 4 Wege in einem Array zur generellen Arraylist.
-                this.wege.add(wege);
-            } else if (punkte.get(i) instanceof Bushaltestelle aktuell) {
-                Bushaltestelle nächste;
-                if (i + 1 < punkte.size()) {
-                    nächste = (Bushaltestelle) punkte.get(i + 1);
-                } else {
-                    nächste = (Bushaltestelle) punkte.getFirst();
-                }
-                Zwischenpunkt mittel = new Zwischenpunkt((aktuell.getXPos() + nächste.getXPos()) / 2, (aktuell.getYPos() + nächste.getYPos()) / 2, "Hallo");
-                ArrayList<Weg> wege = new ArrayList<>();
-                for (int j = 0; j < 4; j++) {
-                    wege.add(new Straße(aktuell, nächste, mittel, j % 2 != 0, j / 2 == 0, j));
-                }
-                //Hinzufügen der 4 Wege in einem Array zur generellen Arraylist.
-                this.wege.add(wege);
-            } else if (punkte.get(i) instanceof Bahnhof aktuell) {
-                Bahnhof nächste;
-                if (i + 1 < punkte.size()) {
-                    nächste = (Bahnhof) punkte.get(i + 1);
-                } else {
-                    nächste = (Bahnhof) punkte.getFirst();
-                }
-                Zwischenpunkt mittel = new Zwischenpunkt((aktuell.getXPos() + nächste.getXPos()) / 2, (aktuell.getYPos() + nächste.getYPos()) / 2, "Hallo");
-                ArrayList<Weg> wege = new ArrayList<>();
-                for (int j = 0; j < 4; j++) {
-                    wege.add(new Straße(aktuell, nächste, mittel, j % 2 != 0, j / 2 == 0, j));
-                }
-                //Hinzufügen der 4 Wege in einem Array zur generellen Arraylist.
-                this.wege.add(wege);
+            //Nimmt das aktuelle Element element
+            Punkt aktuell = punkte.get(i);
+            //Nimmt das nächste Element, falls es schon das letzte element ist nimmt es das erste Element als Ziel.
+            Punkt nächste;
+            if (i + 1 < punkte.size() ) {
+                nächste = punkte.get(i + 1);
+            } else {
+                nächste = punkte.getFirst();
             }
+
+            //Zwischenpunkt als hilfe für die liniengeneration. Wird nicht abgespeichert.
+            Zwischenpunkt mittel = new Zwischenpunkt((aktuell.getXPos() + nächste.getXPos()) / 2, (aktuell.getYPos() + nächste.getYPos()) / 2);
+
+            //Initialisierung eines Weg Arraylist welches die 4 Wege speichert.
+            ArrayList<Weg> wege = new ArrayList<>();
+
+            //Erstellung der 4 Wege von punkt aktuell zu Punkt nächste, mithilfe überladene Konstruktoren.
+            for (int j = 0; j < 4; j++) {
+                wege.add(new Straße(aktuell, nächste, mittel, j % 2 != 0, j / 2 == 0, j));
+            }
+            //Hinzufügen der 4 Wege in einem Array zur generellen Arraylist.
+            this.wege.add(wege);
         }
 
         //Zeichnen der Wege und Punkte
@@ -183,10 +152,7 @@ public class Model {
             }
         }
 
-        for (Punkt punkt : punkte) {
-            //System.out.println(punkt.toString());
-            root.getChildren().addAll(punkt);
-        }
+        root.getChildren().addAll(punkte);
     }
 
     /**
@@ -298,7 +264,6 @@ public class Model {
         if (zeile.contains(datentyp + "[")) {
             double xPos = Double.parseDouble(zeile.split("xPos=")[1].split(",")[0]);
             double yPos = Double.parseDouble(zeile.split("yPos=")[1].split(",")[0]);
-            //TODO kontrollieren ob das hier noch geht.
             if (Objects.equals(datentyp, "Parkhaus")) {
                 punkte.add(new Parkhaus(xPos, yPos));
             } else if (Objects.equals(datentyp, "Bushaltestelle")) {
