@@ -12,7 +12,6 @@ import javafx.scene.shape.Circle;
 public abstract class Punkt extends Circle {
     private final double xPos;
     private final double yPos;
-    private final String name;
     private final Color farbeColor;
 
     /**
@@ -20,14 +19,12 @@ public abstract class Punkt extends Circle {
      *
      * @param xPos  X-Position des Punkts
      * @param yPos  Y-Position des Punkts
-     * @param name  Name des Punkts
      * @param farbe Farbe des Punkts
      */
-    Punkt(double xPos, double yPos, String name, Color farbe) {
+    Punkt(double xPos, double yPos, Color farbe) {
         super(xPos, yPos, 5, farbe);
         this.xPos = xPos;
         this.yPos = yPos;
-        this.name = name;
         this.farbeColor = farbe;
     }
 
@@ -55,7 +52,6 @@ public abstract class Punkt extends Circle {
     public String toString() {
         return "Punkt[" + "xPos=" + xPos +
                 ", yPos=" + yPos +
-                ", name=" + name +
                 ", farbeColor=" + farbeColor +
                 "]";
     }
@@ -68,7 +64,6 @@ public abstract class Punkt extends Circle {
     protected String toString(String datentyp) {
         return datentyp + "[" + "xPos=" + xPos +
                 ", yPos=" + yPos +
-                ", name=" + name +
                 ", farbeColor=" + farbeColor +
                 "]";
     }
