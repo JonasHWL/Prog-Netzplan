@@ -94,7 +94,7 @@ public class Model {
             }
         }
 
-        //Generation für Bushaltestellen muss angepasst werden
+        //Generation für Bushaltestellen
         while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen){
             int xPos = rand.nextInt(1, 15);
             int yPos = rand.nextInt(1,15);
@@ -104,7 +104,7 @@ public class Model {
             }
         }
 
-        //Generation für Bahnhof muss angepasst werden
+        //Generation für Bahnhof
         for (int i = 0; i < anzahlBahnhof; i++){
             int xPos = rand.nextInt(1, 15);
             int yPos = rand.nextInt(1,15);
@@ -282,13 +282,13 @@ public class Model {
     private void searchImport(String zeile, String datentyp) {
         if (zeile.contains(datentyp + "[")) {
             double xPos = Double.parseDouble(zeile.split("xPos=")[1].split(",")[0]);
-            double yPos = Double.parseDouble(zeile.split("yPos=")[1].split(",")[0]);
+            double yPos = Double.parseDouble(zeile.split("yPos=")[1].split("]")[0]);
             if (Objects.equals(datentyp, "Parkhaus")) {
                 punkte.add(new Parkhaus(xPos, yPos));
             } else if (Objects.equals(datentyp, "Bushaltestelle")) {
                 punkte.add(new Bushaltestelle(xPos, yPos));
             } else if (Objects.equals(datentyp, "Bahnhof")) {
-                punkte.add(new Bahnhof(xPos, yPos));
+                bahnhöfe.add(new Bahnhof(xPos, yPos));
             }
         }
     }
