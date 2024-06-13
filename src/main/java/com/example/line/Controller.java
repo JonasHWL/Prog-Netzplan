@@ -125,9 +125,10 @@ public class Controller {
         if(stage != null)
             stage.close();
     }
+
     /*
     ---------   Menubar     --------
- */
+    */
     // Erstellung einer Hilfe alert box, um den grundaufbau zu erklären es
     //         !!!!!! fehlen noch weitere Informationen !!!!!!
     @FXML
@@ -137,24 +138,6 @@ public class Controller {
         help.setHeaderText(null);
         help.setContentText("Mit dem Button Generieren kann man einen Netzplan/Karte erstellen" +"\n"+
                 "Mit dem Button Custom kann man Eigene Punkte der Karte festlegen");
-
         help.showAndWait();
     }
-
-    /*
-        Export des seeds und informationen in eine datei über einen button in der MenuBar
-     */
-    @FXML
-    public void Export(ActionEvent event) {
-        model.export();
-    }
-
-    /*
-            !!!!!Funktioniert noch nicht richtig wird noch repariert!!!!!
-     */
-    @FXML
-    public void Import(ActionEvent event) {
-        model.importKarte();
-    }
-
 }

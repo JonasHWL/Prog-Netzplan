@@ -10,9 +10,11 @@
         <?import javafx.scene.layout.GridPane?>
         <?import javafx.scene.layout.HBox?>
         <?import javafx.scene.layout.RowConstraints?>
-        <?import javafx.scene.text.Font?>
 
 
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/18.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.line.Controller">
 <center>
     <AnchorPane fx:id="anchorPane" prefHeight="435.0" prefWidth="649.0" BorderPane.alignment="CENTER" />
@@ -69,13 +71,23 @@
     </HBox>
 </bottom>
 <top>
-    <Label fx:id="lauf" text="Label:" textAlignment="CENTER" textOverrun="CLIP" underline="true" BorderPane.alignment="CENTER">
-        <BorderPane.margin>
-            <Insets top="30.0" />
-        </BorderPane.margin>
-        <font>
-            <Font name="Consolas Bold" size="30.0" />
-        </font>
-    </Label>
+    <AnchorPane prefHeight="69.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+            <MenuBar layoutY="2.0">
+                <menus>
+                    <Menu mnemonicParsing="false" text="File">
+                        <items>
+                            <MenuItem mnemonicParsing="false" text="Platzhalter" />
+                        </items>
+                    </Menu>
+                    <Menu mnemonicParsing="false" text="Info">
+                        <items>
+                            <MenuItem onAction="#help" mnemonicParsing="false" text="Help" />
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+            <Label fx:id="Lauf" layoutX="600.0" layoutY="15.0" prefHeight="40.0" prefWidth="50.0" text="Label" />
+    </AnchorPane>
+
 </top>
 </BorderPane>
