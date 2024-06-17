@@ -44,17 +44,6 @@ public abstract class Punkt extends Circle {
 
     /**
      * Gibt alle Instanzvariablen als String aus
-     * @return Instanzvariablen als String
-     */
-    @Override
-    public String toString() {
-        return "Punkt[" + "xPos=" + xPos +
-                ", yPos=" + yPos +
-                "]";
-    }
-
-    /**
-     * Gibt alle Instanzvariablen als String aus
      * @param datentyp Datentyp, des Objects
      * @return Instanzvariablen als String
      */
