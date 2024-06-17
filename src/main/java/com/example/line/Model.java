@@ -15,7 +15,7 @@ import java.io.IOException;
  * @version 11.06.2024
  */
 public class Model {
-    private static Model instance;
+    private static Model instanz;
     private long seed;
     private Random rand;
     private final ArrayList<Punkt> punkte = new ArrayList<>();
@@ -43,11 +43,11 @@ public class Model {
      * Gibt die aktuelle Instanz vom Model Objekt
      * @return Das model Objekt
      */
-    public static Model getInstance(){
-        if (instance == null){
-            instance = new Model();
+    public static Model getInstanz(){
+        if (instanz == null){
+            instanz = new Model();
         }
-        return instance;
+        return instanz;
     }
 
     /**
@@ -209,8 +209,6 @@ public class Model {
                 break;
         }
     }
-
-
 
     /**
      * Erstellt eine .txt Datei welche Informationen zur Generation der Karte mitgibt.

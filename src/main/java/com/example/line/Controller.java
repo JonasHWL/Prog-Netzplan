@@ -20,7 +20,7 @@ public class Controller {
 
     @FXML
     void initialize() {
-        model = Model.getInstance();
+        model = Model.getInstanz();
     }
 
     @FXML
