@@ -21,30 +21,29 @@ public abstract class Weg extends Line {
 
     Weg(Punkt start, Punkt ende, Zwischenpunkt mitte, Color farbe, boolean horizontal, boolean zuMitte, int schritt) {
         super(
-                zuMitte ? //Für Line StartX
-                        start.getXPos() : //zuMitte true
-                        mitte.getXPos(), //zuMitte false
+            zuMitte ? //Für Line StartX
+                start.getXPos() : //zuMitte true
+                mitte.getXPos(), //zuMitte false
 
-                horizontal ? //Fur Line StartY
-                        zuMitte ? //Horizontal true
-                                mitte.getYPos() : //zuMitte true
-                                ende.getYPos() //zzMitte false
-                        : zuMitte ? //Horizontal false
-                        start.getYPos() : //zuMitte true
-                        mitte.getYPos(), //zuMitte false
+            horizontal ? //Fur Line StartY
+                zuMitte ? //Horizontal true
+                    mitte.getYPos() : //zuMitte true
+                    ende.getYPos() //zzMitte false
+                : zuMitte ? //Horizontal false
+                    start.getYPos() : //zuMitte true
+                    mitte.getYPos(), //zuMitte false
 
-                horizontal ? //Fur Line EndX
-                        zuMitte ? //Horizontal true
-                                mitte.getXPos() : //zuMitte true
-                                ende.getXPos() //zzMitte false
-                        : zuMitte ? //Horizontal false
-                        start.getXPos() : //zuMitte true
-                        mitte.getXPos(), //zuMitte false
+            horizontal ? //Fur Line EndX
+                zuMitte ? //Horizontal true
+                    mitte.getXPos() : //zuMitte true
+                    ende.getXPos() //zuMitte false
+                : zuMitte ? //Horizontal false
+                    start.getXPos() : //zuMitte true
+                    mitte.getXPos(), //zuMitte false
 
-
-                zuMitte ? //Für Line EndY
-                        mitte.getYPos() : //zuMitte true
-                        ende.getYPos()//zuMitte false
+            zuMitte ? //Für Line EndY
+                mitte.getYPos() : //zuMitte true
+                ende.getYPos()//zuMitte false
         );
 
         this.startX = super.getStartX();
