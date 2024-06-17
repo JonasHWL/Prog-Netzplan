@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -123,5 +124,20 @@ public class Controller {
     public void beenden(Stage stage){
         if(stage != null)
             stage.close();
+    }
+
+    /*
+    ---------   Menubar     --------
+    */
+    // Erstellung einer Hilfe alert box, um den grundaufbau zu erklären es
+    //         !!!!!! fehlen noch weitere Informationen !!!!!!
+    @FXML
+    public void help(ActionEvent event) {
+        Alert help = new Alert(Alert.AlertType.INFORMATION);
+        help.setTitle("Hilfe");
+        help.setHeaderText(null);
+        help.setContentText("Mit dem Button Generieren kann man einen Netzplan/Karte erstellen" +"\n"+
+                "Mit dem Button Custom kann man Eigene Punkte der Karte festlegen");
+        help.showAndWait();
     }
 }
