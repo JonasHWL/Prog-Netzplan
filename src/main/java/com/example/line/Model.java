@@ -94,40 +94,40 @@ public class Model {
     private void generierePunkte(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhöfe) {
 
         while (koordinaten.size() < anzahlParkhaus) {
-            int xPos = rand.nextInt(1, 15);
-            int yPos = rand.nextInt(1,15);
+            int xPos = rand.nextInt(1, 15)*40;
+            int yPos = rand.nextInt(1,15)*40;
 
             Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
 
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
-                punkte.add(new Parkhaus(xPos*40, yPos*40));
+                punkte.add(new Parkhaus(xPos, yPos));
             }
         }
 
         //Generation für Bushaltestellen
         while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen){
-            int xPos = rand.nextInt(1, 15);
-            int yPos = rand.nextInt(1,15);
+            int xPos = rand.nextInt(1, 15)*40;
+            int yPos = rand.nextInt(1,15)*40;
 
             Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
 
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
-                punkte.add(rand.nextInt(0, punkte.size()), new Bushaltestelle(xPos * 40, yPos * 40));
+                punkte.add(rand.nextInt(0, punkte.size()), new Bushaltestelle(xPos, yPos));
             }
         }
 
         //Generation für Bahnhof
         while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen+anzahlBahnhöfe){
-            int xPos = rand.nextInt(1, 15);
-            int yPos = rand.nextInt(1,15);
+            int xPos = rand.nextInt(1, 15)*40;
+            int yPos = rand.nextInt(1,15)*40;
 
             Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
 
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
-                bahnhöfe.add(new Bahnhof(xPos*40, yPos*40));
+                bahnhöfe.add(new Bahnhof(xPos, yPos));
             }
         }
     }
@@ -199,12 +199,14 @@ public class Model {
      * @throws PunktExistiertBereitsException Falls die Koordinaten schon belegt sind.
      */
     public void benutzerDefinierterPunkt(int xPos, int yPos, char datentyp) throws PunktExistiertBereitsException {
+        xPos *= 40;
+        yPos *= 40;
         Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
         switch (datentyp) {
             case 'p' :
                 if(!koordinaten.contains(neueKoordinaten)){
                     koordinaten.add(neueKoordinaten);
-                    punkte.add(new Parkhaus(xPos*40, yPos*40));
+                    punkte.add(new Parkhaus(xPos, yPos));
                 } else {
                     throw new PunktExistiertBereitsException("Diese Koordinaten sind belegt!");
                 }
@@ -212,7 +214,7 @@ public class Model {
             case 'b' :
                 if(!koordinaten.contains(neueKoordinaten)){
                     koordinaten.add(neueKoordinaten);
-                    punkte.add(new Bushaltestelle(xPos*40, yPos*40));
+                    punkte.add(new Bushaltestelle(xPos, yPos));
                 } else {
                     throw new PunktExistiertBereitsException("Diese Koordinaten sind belegt!");
                 }
@@ -220,7 +222,7 @@ public class Model {
             case 'z' :
                 if(!koordinaten.contains(neueKoordinaten)){
                     koordinaten.add(neueKoordinaten);
-                    bahnhöfe.add(new Bahnhof(xPos*40, yPos*40));
+                    bahnhöfe.add(new Bahnhof(xPos, yPos));
                 } else {
                     throw new PunktExistiertBereitsException("Diese Koordinaten sind belegt!");
                 }
