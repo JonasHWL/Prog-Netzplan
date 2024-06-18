@@ -58,6 +58,47 @@ public abstract class Weg extends Line {
         super.setStrokeWidth(2);
     }
 
+    Weg(Punkt start, Punkt ende, Color farbe, int schritt) {
+        super(
+                schritt / 2 == 0 ? //Für Line StartX
+                        start.getXPos() : //zuMitte true
+                        (start.getXPos()+ende.getXPos())/2, //zuMitte false
+
+                schritt % 2 != 0 ? //Fur Line StartY
+                        schritt / 2 == 0 ? //Horizontal true
+                                (start.getYPos()+ende.getYPos())/2 : //zuMitte true
+                                ende.getYPos() //zzMitte false
+                        : schritt / 2 == 0 ? //Horizontal false
+                        start.getYPos() : //zuMitte true
+                        (start.getYPos()+ende.getYPos())/2, //zuMitte false
+
+                schritt % 2 != 0 ? //Fur Line EndX
+                        schritt / 2 == 0 ? //Horizontal true
+                                (start.getXPos()+ende.getXPos())/2 : //zuMitte true
+                                ende.getXPos() //zuMitte false
+                        : schritt / 2 == 0 ? //Horizontal false
+                        start.getXPos() : //zuMitte true
+                        (start.getXPos()+ende.getXPos())/2, //zuMitte false
+
+                schritt / 2 == 0 ? //Für Line EndY
+                        (start.getYPos()+ende.getYPos())/2 : //zuMitte true
+                        ende.getYPos()//zuMitte false
+        );
+
+        this.startX = super.getStartX();
+        this.startY = super.getStartY();
+        this.endeX = super.getEndX();
+        this.endeY = super.getEndY();
+        this.farbe = farbe;
+        this.horizontal = schritt % 2 != 0;
+        this.zuMitte = schritt / 2 == 0 ;
+        this.schritt = schritt;
+        super.setStroke(farbe);
+        super.setStrokeWidth(2);
+    }
+
+
+
     Weg(Bahnhof start, Bahnhof ende, Color farbe){
         super(start.getXPos(), start.getYPos(), ende.getXPos(), ende.getYPos());
         this.startX = start.getXPos();
