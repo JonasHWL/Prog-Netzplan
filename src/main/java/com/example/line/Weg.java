@@ -7,7 +7,7 @@ import javafx.scene.shape.Line;
  * Klasse für die Wege welche auf der Benutzeroberfläche angezeigt werden.
  *
  * @author Amel Aho
- * @version 07.06.2024
+ * @version 20.06.2024
  */
 public abstract class Weg extends Line {
     private boolean horizontal = false;

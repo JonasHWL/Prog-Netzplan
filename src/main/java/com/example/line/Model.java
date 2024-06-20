@@ -12,7 +12,7 @@ import java.io.IOException;
  * Erstellt die verschiedene Punkte und dazugehörigen Wege die dargestellt werden sollen.
  *
  * @author Amel Aho
- * @version 11.06.2024
+ * @version 20.06.2024
  */
 public class Model {
     private static Model instanz;
@@ -21,6 +21,12 @@ public class Model {
     private final ArrayList<Punkt> punkte = new ArrayList<>();
     private final HashSet<Koordinaten> koordinaten= new HashSet<>();
     private final ArrayList<ArrayList<Weg>> wege= new ArrayList<>();
+    private final int MINIMUM_POSITION_X;
+    private final int MAXIMUM_POSITION_X;
+    private final int MINIMUM_POSITION_Y;
+    private final int MAXIMUM_POSITION_Y;
+    private final int POSITION_MULTIPLIKATOR_X;
+    private final int POSITION_MULTIPLIKATOR_Y;
 
     /**
      * Konstruktor für das Model.
@@ -29,6 +35,15 @@ public class Model {
         //Default Seed 9223372036854775807L
         this.seed = 55555;
         this.rand = new Random(seed);
+
+        this.MINIMUM_POSITION_X = 1;
+        this.MAXIMUM_POSITION_X = 16;
+        this.MINIMUM_POSITION_Y = 1;
+        this.MAXIMUM_POSITION_Y = 16;
+        this.POSITION_MULTIPLIKATOR_X = 40;
+        this.POSITION_MULTIPLIKATOR_Y = 40;
+
+        //ACHTUNG Limit der Punkten ist MAXIMUM_POSITION_X * MAXIMUM_POSITION_Y
     }
 
     /**
@@ -84,10 +99,11 @@ public class Model {
      * @param anzahlBahnhöfe Anzahl der zu erstellenden Punkte
      */
     private void generierePunkte(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhöfe) {
+        final int ANFANG_VON_PUNKTE_ARRAYLIST = 0;
 
         while (koordinaten.size() < anzahlParkhaus) {
-            int xPos = rand.nextInt(1, 16) * 40;
-            int yPos = rand.nextInt(1, 16) * 40;
+            int xPos = rand.nextInt(MINIMUM_POSITION_X, MAXIMUM_POSITION_X) * POSITION_MULTIPLIKATOR_X;
+            int yPos = rand.nextInt(MINIMUM_POSITION_Y, MAXIMUM_POSITION_Y) * POSITION_MULTIPLIKATOR_Y;
 
             Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
 
@@ -99,15 +115,15 @@ public class Model {
 
         //Generation für Bushaltestellen
         while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen){
-            int xPos = rand.nextInt(1, 16) * 40;
-            int yPos = rand.nextInt(1, 16) * 40;
+            int xPos = rand.nextInt(MINIMUM_POSITION_X, MAXIMUM_POSITION_X) * POSITION_MULTIPLIKATOR_X;
+            int yPos = rand.nextInt(MINIMUM_POSITION_Y, MAXIMUM_POSITION_Y) * POSITION_MULTIPLIKATOR_Y;
 
             Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
 
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
                 if (!punkte.isEmpty()) {
-                    punkte.add(rand.nextInt(0, punkte.size()), new Bushaltestelle(xPos, yPos));
+                    punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bushaltestelle(xPos, yPos));
                 } else {
                     punkte.add(new Bushaltestelle(xPos, yPos));
                 }
@@ -116,15 +132,15 @@ public class Model {
 
         //Generation für Bahnhof
         while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen+anzahlBahnhöfe){
-            int xPos = rand.nextInt(1, 16) * 40;
-            int yPos = rand.nextInt(1, 16) * 40;
+            int xPos = rand.nextInt(MINIMUM_POSITION_X, MAXIMUM_POSITION_X) * POSITION_MULTIPLIKATOR_X;
+            int yPos = rand.nextInt(MINIMUM_POSITION_Y, MAXIMUM_POSITION_Y) * POSITION_MULTIPLIKATOR_Y;
 
             Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
 
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
                 if (!punkte.isEmpty()) {
-                    punkte.add(rand.nextInt(0, punkte.size()), new Bahnhof(xPos, yPos));
+                    punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bahnhof(xPos, yPos));
                 } else {
                     punkte.add(new Bahnhof(xPos, yPos));
                 }
@@ -207,8 +223,8 @@ public class Model {
      * @throws PunktExistiertBereitsException Falls die Koordinaten schon belegt sind.
      */
     public void benutzerDefinierterPunkt(int xPos, int yPos, char datentyp) throws PunktExistiertBereitsException {
-        xPos *= 40;
-        yPos *= 40;
+        xPos *= POSITION_MULTIPLIKATOR_X;
+        yPos *= POSITION_MULTIPLIKATOR_Y;
         Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
         switch (datentyp) {
             case 'p' :

@@ -7,7 +7,7 @@ import javafx.scene.shape.Circle;
  * Punkte die auf der Benutzeroberfläche erscheinen.
  *
  * @author Amel Aho
- * @version 07.06.2024
+ * @version 20.06.2024
  */
 public abstract class Punkt extends Circle {
     private final double xPos;
