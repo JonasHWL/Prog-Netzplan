@@ -245,6 +245,21 @@ public class Model {
     }
 
     /**
+     * Gibt ein ArrayList mit allen Custom generierten Punkten zurück.
+     *
+     * @return ArrayList mit Custom generierten Punkten.
+     */
+    public ArrayList<Punkt> getCustomPunkte() {
+        ArrayList<Punkt> customPunkte = new ArrayList<>();
+        for (Punkt punkt : punkte) {
+            if (punkt.isCustom()) {
+                customPunkte.add(punkt);
+            }
+        }
+        return customPunkte;
+    }
+
+    /**
      * Erstellt eine .txt Datei welche Informationen zur Generation der Karte mitgibt.
      * Der Seed.
      * Die Anzahl von Punkten.
