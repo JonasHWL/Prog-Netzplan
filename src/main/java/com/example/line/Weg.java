@@ -18,6 +18,7 @@ public abstract class Weg extends Line {
     private final double endeY;
     private final Color farbe;
     private final int schritt;
+    private final Punkt start;
 
     Weg(Punkt start, Punkt ende, Zwischenpunkt mitte, Color farbe, boolean horizontal, boolean zuMitte, int schritt) {
         super(
@@ -46,6 +47,7 @@ public abstract class Weg extends Line {
                 ende.getYPos()//zuMitte false
         );
 
+        this.start = start;
         this.startX = super.getStartX();
         this.startY = super.getStartY();
         this.endeX = super.getEndX();
@@ -68,6 +70,8 @@ public abstract class Weg extends Line {
         this.schritt = 0;
         super.setStroke(farbe);
         super.setStrokeWidth(2);
+
+        this.start = start;
     }
 
     /**
@@ -104,5 +108,9 @@ public abstract class Weg extends Line {
                 ", zuMitte=" + zuMitte +
                 ", Schritt=" + schritt +
                 "]";
+    }
+
+    public Punkt getStart() {
+        return this.start;
     }
 }

@@ -210,7 +210,6 @@ public class Model {
         //Zeichnen der Wege und Punkte
         for (ArrayList<Weg> wegeArr : wege) {
             for (Weg weg : wegeArr) {
-                //System.out.println(weg.toString());
                 root.getChildren().addAll(weg);
             }
         }
@@ -357,5 +356,37 @@ public class Model {
                 punkte.add(new Bahnhof(xPos, yPos));
             }
         }
+    }
+
+    /**
+     * Bestimmt alle Weg Objekte welche benötigt werden, um die Koordinaten für die Fahrzeuge zu bestimmen.
+     *
+     * @param start Startpunkt
+     * @param ziel  Endpunkt
+     * @return Arraylist mit Weg Objekte von denen weg.get(i).getStartX aufgerufen werden kann,
+     */
+    public ArrayList<Weg> berechneWeg(Punkt start, Punkt ziel) {
+        ArrayList<Weg> wegAusgabe = new ArrayList<>();
+        ArrayList<Punkt> wegPunkte = new ArrayList<>();
+        int i = punkte.lastIndexOf(start);
+        int j = punkte.lastIndexOf(ziel);
+        wegPunkte.add(start);
+        if (i != -1 && j != -1) {
+            while (i < j) {
+                wegPunkte.add(punkte.get(i++));
+            }
+        }
+
+        for (ArrayList<Weg> wegeArr : wege) {
+            for (Weg weg : wegeArr) {
+                for (Punkt p : wegPunkte) {
+                    if (weg.getStart() == p) {
+                        wegAusgabe.add(weg);
+                    }
+                }
+            }
+        }
+
+        return wegAusgabe;
     }
 }
