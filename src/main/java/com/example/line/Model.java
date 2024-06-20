@@ -182,18 +182,29 @@ public class Model {
         }
 
         /*
-        TODO Laufzeit verbessern
         Erstellung vom Netz für die Bahnhöfe
-        Laufzeit O(n^2)
-        */
-        for (int i = 0; i < punkte.size(); i++) {
-            for (int j = i; j < punkte.size() - 1; j++) {
-                if (punkte.get(i) instanceof Bahnhof aktuell && punkte.get(j) instanceof Bahnhof naechste) {
-                    ArrayList<Weg> wege = new ArrayList<>();
-                    wege.add(new Schiene(aktuell, naechste));
-                    this.wege.add(wege);
-                }
+        Laufzeit O(n)
+         */
+        ArrayList<Bahnhof> bahnhoefe = new ArrayList<>();
+        for (Punkt punkt : punkte) {
+            if (punkt instanceof Bahnhof) {
+                bahnhoefe.add((Bahnhof) punkt);
             }
+        }
+
+        for (int i = 0; i < bahnhoefe.size(); i++) {
+            Bahnhof aktuell = bahnhoefe.get(i);
+            //Nimmt das nächste Element, falls es schon das letzte element ist nimmt es das erste Element als Ziel.
+            Bahnhof naechste;
+            if (i + 1 < bahnhoefe.size()) {
+                naechste = bahnhoefe.get(i + 1);
+            } else {
+                naechste = bahnhoefe.getFirst();
+            }
+
+            ArrayList<Weg> wege = new ArrayList<>();
+            wege.add(new Schiene(aktuell, naechste));
+            this.wege.add(wege);
         }
 
         //Zeichnen der Wege und Punkte
