@@ -181,25 +181,17 @@ public class Model {
             this.wege.add(wege);
         }
 
-        //Durchgehen vom Bahnhöfe
-        int gefundenBahnhoefe = 0;
-        for (Punkt punkt : punkte) {
-            if (punkt instanceof Bahnhof) {
-                gefundenBahnhoefe++;
-            }
-        }
-
-        while (gefundenBahnhoefe > 0) {
-            for (int i = 0; i < punkte.size(); i++) {
-                for (int j = i; j < punkte.size() - 1; j++) {
-                    if (punkte.get(i) instanceof Bahnhof aktuell) {
-                        if (punkte.get(j) instanceof Bahnhof naechste) {
-                            ArrayList<Weg> wege = new ArrayList<>();
-                            wege.add(new Schiene(aktuell, naechste));
-                            this.wege.add(wege);
-                            gefundenBahnhoefe--;
-                        }
-                    }
+        /*
+        TODO Laufzeit verbessern
+        Erstellung vom Netz für die Bahnhöfe
+        Laufzeit O(n^2)
+        */
+        for (int i = 0; i < punkte.size(); i++) {
+            for (int j = i; j < punkte.size() - 1; j++) {
+                if (punkte.get(i) instanceof Bahnhof aktuell && punkte.get(j) instanceof Bahnhof naechste) {
+                    ArrayList<Weg> wege = new ArrayList<>();
+                    wege.add(new Schiene(aktuell, naechste));
+                    this.wege.add(wege);
                 }
             }
         }
