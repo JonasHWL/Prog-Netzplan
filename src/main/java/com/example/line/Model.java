@@ -19,9 +19,7 @@ public class Model {
     private long seed;
     private Random rand;
     private final ArrayList<Punkt> punkte = new ArrayList<>();
-    private final ArrayList<Bahnhof> bahnhöfe = new ArrayList<>();
     private final HashSet<Koordinaten> koordinaten= new HashSet<>();
-    //private ArrayList<Fahrzeug> fahrzeuge = new ArrayList<Fahrzeug>();
     private final ArrayList<ArrayList<Weg>> wege= new ArrayList<>();
 
     /**
@@ -31,12 +29,6 @@ public class Model {
         //Default Seed 9223372036854775807L
         this.seed = 55555;
         this.rand = new Random(seed);
-
-        /*
-        4 4 cus1
-        14 14 cus2
-        6 10 cus3
-        */
     }
 
     /**
@@ -94,8 +86,8 @@ public class Model {
     private void generierePunkte(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhöfe) {
 
         while (koordinaten.size() < anzahlParkhaus) {
-            int xPos = rand.nextInt(1, 15)*40;
-            int yPos = rand.nextInt(1,15)*40;
+            int xPos = rand.nextInt(1, 16) * 40;
+            int yPos = rand.nextInt(1, 16) * 40;
 
             Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
 
@@ -107,27 +99,35 @@ public class Model {
 
         //Generation für Bushaltestellen
         while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen){
-            int xPos = rand.nextInt(1, 15)*40;
-            int yPos = rand.nextInt(1,15)*40;
+            int xPos = rand.nextInt(1, 16) * 40;
+            int yPos = rand.nextInt(1, 16) * 40;
 
             Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
 
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
-                punkte.add(rand.nextInt(0, punkte.size()), new Bushaltestelle(xPos, yPos));
+                if (!punkte.isEmpty()) {
+                    punkte.add(rand.nextInt(0, punkte.size()), new Bushaltestelle(xPos, yPos));
+                } else {
+                    punkte.add(new Bushaltestelle(xPos, yPos));
+                }
             }
         }
 
         //Generation für Bahnhof
         while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen+anzahlBahnhöfe){
-            int xPos = rand.nextInt(1, 15)*40;
-            int yPos = rand.nextInt(1,15)*40;
+            int xPos = rand.nextInt(1, 16) * 40;
+            int yPos = rand.nextInt(1, 16) * 40;
 
             Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
 
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
-                bahnhöfe.add(new Bahnhof(xPos, yPos));
+                if (!punkte.isEmpty()) {
+                    punkte.add(rand.nextInt(0, punkte.size()), new Bahnhof(xPos, yPos));
+                } else {
+                    punkte.add(new Bahnhof(xPos, yPos));
+                }
             }
         }
     }
@@ -165,18 +165,27 @@ public class Model {
             this.wege.add(wege);
         }
 
-        //Durchgehen vom Bahnhöfe array
-        for (int i = 0; i < bahnhöfe.size(); i++) {
-            Bahnhof aktuell = bahnhöfe.get(i);
-            Bahnhof nächste;
-            if (i + 1 < bahnhöfe.size() ) {
-                nächste = bahnhöfe.get(i + 1);
-            } else {
-                nächste = bahnhöfe.getFirst();
+        //Durchgehen vom Bahnhöfe
+        int gefundenBahnhoefe = 0;
+        for (Punkt punkt : punkte) {
+            if (punkt instanceof Bahnhof) {
+                gefundenBahnhoefe++;
             }
-            ArrayList<Weg> wege = new ArrayList<>();
-            wege.add(new Schiene(aktuell, nächste));
-            this.wege.add(wege);
+        }
+
+        while (gefundenBahnhoefe > 0) {
+            for (int i = 0; i < punkte.size(); i++) {
+                for (int j = i; j < punkte.size() - 1; j++) {
+                    if (punkte.get(i) instanceof Bahnhof aktuell) {
+                        if (punkte.get(j) instanceof Bahnhof naechste) {
+                            ArrayList<Weg> wege = new ArrayList<>();
+                            wege.add(new Schiene(aktuell, naechste));
+                            this.wege.add(wege);
+                            gefundenBahnhoefe--;
+                        }
+                    }
+                }
+            }
         }
 
         //Zeichnen der Wege und Punkte
@@ -188,7 +197,6 @@ public class Model {
         }
 
         root.getChildren().addAll(punkte);
-        root.getChildren().addAll(bahnhöfe);
     }
 
     /**
@@ -206,7 +214,9 @@ public class Model {
             case 'p' :
                 if(!koordinaten.contains(neueKoordinaten)){
                     koordinaten.add(neueKoordinaten);
-                    punkte.add(new Parkhaus(xPos, yPos));
+                    Parkhaus parkhaus = new Parkhaus(xPos, yPos);
+                    punkte.add(parkhaus);
+                    parkhaus.setCustom(true);
                 } else {
                     throw new PunktExistiertBereitsException("Diese Koordinaten sind belegt!");
                 }
@@ -214,7 +224,9 @@ public class Model {
             case 'b' :
                 if(!koordinaten.contains(neueKoordinaten)){
                     koordinaten.add(neueKoordinaten);
-                    punkte.add(new Bushaltestelle(xPos, yPos));
+                    Bushaltestelle bushaltestelle = new Bushaltestelle(xPos, yPos);
+                    punkte.add(bushaltestelle);
+                    bushaltestelle.setCustom(true);
                 } else {
                     throw new PunktExistiertBereitsException("Diese Koordinaten sind belegt!");
                 }
@@ -222,7 +234,9 @@ public class Model {
             case 'z' :
                 if(!koordinaten.contains(neueKoordinaten)){
                     koordinaten.add(neueKoordinaten);
-                    bahnhöfe.add(new Bahnhof(xPos, yPos));
+                    Bahnhof bahnhof = new Bahnhof(xPos, yPos);
+                    punkte.add(bahnhof);
+                    bahnhof.setCustom(true);
                 } else {
                     throw new PunktExistiertBereitsException("Diese Koordinaten sind belegt!");
                 }
@@ -255,9 +269,6 @@ public class Model {
             schreiber.write("Seed=" + seed +"\n");
             for (Punkt punkt : punkte) {
                 schreiber.write(punkt.toString() +"\n");
-            }
-            for (Bahnhof bahnhof : bahnhöfe){
-                schreiber.write(bahnhof.toString() +"\n");
             }
             schreiber.close();
             System.out.println("Erfolgreich die Daten exportiert");
@@ -309,7 +320,7 @@ public class Model {
             } else if (Objects.equals(datentyp, "Bushaltestelle")) {
                 punkte.add(new Bushaltestelle(xPos, yPos));
             } else if (Objects.equals(datentyp, "Bahnhof")) {
-                bahnhöfe.add(new Bahnhof(xPos, yPos));
+                punkte.add(new Bahnhof(xPos, yPos));
             }
         }
     }
