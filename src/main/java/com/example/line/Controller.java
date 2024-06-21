@@ -3,12 +3,10 @@ package com.example.line;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
@@ -20,27 +18,55 @@ public class Controller {
 
 
     @FXML
+    AnchorPane anchorPane;
+    Model model;
+
+    @FXML
     void initialize() {
         model = Model.getInstance();
     }
 
     @FXML
     public Button customButton;
+    @FXML
+    public Button generieren;
 
     @FXML
-    private AnchorPane anchorPane;
-
-    Model model;
+    CheckBox checkBoxP;
+    @FXML
+    CheckBox checkBoxBa;
+    @FXML
+    CheckBox checkBoxBu;
 
     @FXML
-    void Eline(ActionEvent event) {
+    private Parent root;
+
+    @FXML
+    void generieren(ActionEvent event) {
+        if(!checkBoxP.isSelected() && !checkBoxBa.isSelected() && !checkBoxBu.isSelected()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Mindestens in einer der CheckBoxen muss ein Haken sein!!!");
+            alert.setHeaderText(null);
+            alert.showAndWait();
+            return;
+        }
         customButton.setDisable(true);
-        model.generiere(anchorPane, 5, 2, 3);
-        System.out.println("Generieren Knopf gedrückt und ausgeführt");
-        model.export();
+        generieren.setDisable(true);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("anzahl-view.fxml"));
+            root = loader.load();
+            ControllerMenge controllerMenge = loader.getController();
+            controllerMenge.Uebernahme(anchorPane, checkBoxP.isSelected(), checkBoxBa.isSelected(), checkBoxBu.isSelected(),generieren, customButton);
+            Stage fenster1 = new Stage();
+            fenster1.setTitle("Anzahl");
+            fenster1.setScene(new Scene(root));
+            fenster1.show();
+        }
+        catch (Exception e) {
+            System.out.println("Fenster konnte nicht geladen werden");
+        }
     }
-
-
 
     /*
             ---------- Ab hier ist für die erstellung der scene zu ständig wo man die custom punkte einlesen kann. -----------
@@ -52,11 +78,13 @@ public class Controller {
 
     @FXML
     void Custom(ActionEvent event) throws IOException {
-        int i = 0;
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("eingabe-view.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("custom-main-view.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             Stage fenster = new Stage();
+            FensterController fensterController = fxmlLoader.getController();
+            //TODO fenster verbessern für eingabe von Custom bahnhof und bus halte
+            fensterController.uebergabe(fenster,root1);
             fenster.setTitle("Eingabe");
             fenster.setScene(new Scene(root1));
             fenster.show();
@@ -67,61 +95,7 @@ public class Controller {
     }
 
     @FXML
-    private Label Error;
-    @FXML
-    private TextField textField1;
-    @FXML
-    private TextField textField2;
-    @FXML
-    private TextField textField3;
-
-    Integer p1;
-    Integer p2;
-    String n;
-
-    @FXML
-    void Eingabe(ActionEvent event) {
-        if(textField1.getText().isEmpty() || textField2.getText().isEmpty() || textField3.getText().isEmpty()){
-            Error.setText("Alle Felder müssen ausgefüllt sein.");
-            return;
-        }
-        try{
-            //Auslesen der Text felder wo man pos1, pos2 und denn namen eingeben kann
-            p1 = Integer.parseInt(textField1.getText());
-            p2 = Integer.parseInt(textField2.getText());
-            n = textField3.getText();
-
-            //hier werden die Pos1, Pos2 und der name in die ausgabe methode geschriebben.
-            Uebergabe ue = new Uebergabe(p1, p2, n);
-            try {
-                model.benutzerDefinierterPunkt(p1, p2, 'p');
-            } catch (PunktExistiertBereitsException e) {
-                Error.setText(e.getMessage());
-                throw new RuntimeException(e);
-            }
-            //Hier wird festgestellt in welcher Stage man sich grade befindet dafür guckt man wo das ActionEvent
-            //ausgeführt wurde deswegen kann man das nicht in einer anderen Methode machen
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            //aufruf der beenden Methode die die stage auf der man sich befindet beendet
-            beenden(stage);
-        }
-        catch (NumberFormatException e) {
-            Error.setText("Ungültige Eingabe für Zahlen.");
-        }
-    }
-
-    @FXML
-    public void Abbrechen(ActionEvent event) {
-        //Hier wird festgestellt in welcher Stage man sich grade befindet dafür guckt man wo das ActionEvent
-        //ausgeführt wurde deswegen kann man das nicht in einer anderen Methode machen
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        //aufruf der beenden Methode die die stage auf der man sich befindet beendet
-        beenden(stage);
-        System.out.println("Test");
-    }
-
-    @FXML
-    public void beenden(Stage stage){
+    public static void beenden(Stage stage){
         if(stage != null)
             stage.close();
     }
@@ -129,8 +103,10 @@ public class Controller {
     /*
     ---------   Menubar     --------
     */
+
     // Erstellung einer Hilfe alert box, um den grundaufbau zu erklären es
-    //         !!!!!! fehlen noch weitere Informationen !!!!!!
+    //TODO fehlen noch weitere Informationen!
+
     @FXML
     public void help(ActionEvent event) {
         Alert help = new Alert(Alert.AlertType.INFORMATION);
@@ -140,4 +116,6 @@ public class Controller {
                 "Mit dem Button Custom kann man Eigene Punkte der Karte festlegen");
         help.showAndWait();
     }
+
+
 }

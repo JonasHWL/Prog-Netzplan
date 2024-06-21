@@ -7,12 +7,15 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+
 public class LineApplication extends Application {
+
 
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(LineApplication.class.getResource("line-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        scene.getStylesheets().add(getClass().getResource("MainCSS.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
 

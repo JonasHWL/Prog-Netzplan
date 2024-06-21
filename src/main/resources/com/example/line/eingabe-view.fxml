@@ -5,15 +5,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/18.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.line.Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/18.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.line.FensterController">
     <top>
-        <Label text="Label" BorderPane.alignment="CENTER" />
+        <Label fx:id="kopf" text="Eingabe Custom: " BorderPane.alignment="CENTER" />
     </top>
     <bottom>
         <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" BorderPane.alignment="CENTER">
-
-
-
             <children>
                 <Button onAction="#Abbrechen" mnemonicParsing="false" text="Abbrechen" textAlignment="CENTER">
                     <HBox.margin>
