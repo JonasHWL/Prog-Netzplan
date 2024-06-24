@@ -77,6 +77,9 @@ public class Model {
     public void generiere(Pane root ,int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof) {
         generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
         erstelleStraßen(root);
+        System.out.println(punkte.getFirst());
+        System.out.println(punkte.get(8));
+        berechneWeg(punkte.getFirst(), punkte.get(8), true);
     }
 
     /**
@@ -351,26 +354,33 @@ public class Model {
      * @param ziel  Endpunkt
      * @return Arraylist mit Weg Objekte von denen weg.get(i).getStartX aufgerufen werden kann,
      */
-    /*public ArrayList<Weg> berechneWeg(Punkt start, Punkt ziel) {
+    public ArrayList<Weg> berechneWeg(Punkt start, Punkt ziel, boolean normalfolge) {
         ArrayList<Weg> wegAusgabe = new ArrayList<>();
         ArrayList<Punkt> wegPunkte = new ArrayList<>();
-        int i = punkte.lastIndexOf(start);
-        int j = punkte.lastIndexOf(ziel);
-        wegPunkte.add(start);
-        if (i != -1 && j != -1) {
-            while (i < j) {
-                wegPunkte.add(punkte.get(i++));
-            }
-        }
-
-        for (WegGruppe wegeArr : wege) {
-            for (Punkt p : wegPunkte) {
-                if (p.getStart() == p) {
-                    wegAusgabe.add(weg);
+        if(normalfolge){
+            int i = punkte.lastIndexOf(start);
+            int j = punkte.lastIndexOf(ziel);
+            wegPunkte.add(start);
+            if (i != -1 && j != -1) {
+                while (i < j) {
+                    wegPunkte.add(punkte.get(i++));
                 }
             }
+
+            for (WegGruppe weg : wege) {
+                if(weg.getWege().size() == 4){
+                    for (Weg p : weg.getWege()) {
+                        if(wegPunkte.contains(weg.getStartPunkt())){
+                            System.out.println(p);
+                            wegAusgabe.add(p);
+                        }
+                    }
+                }
+            }
+        } else {
+            //TODO Rückwärts berechnung
         }
 
         return wegAusgabe;
-    }*/
+    }
 }
