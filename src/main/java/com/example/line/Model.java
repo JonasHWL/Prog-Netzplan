@@ -20,7 +20,7 @@ public class Model {
     private Random rand;
     private final ArrayList<Punkt> punkte = new ArrayList<>();
     private final HashSet<Koordinaten> koordinaten= new HashSet<>();
-    private final ArrayList<ArrayList<Weg>> wege= new ArrayList<>();
+    private final ArrayList<WegGruppe> wege= new ArrayList<>();
     private final int MINIMUM_POSITION_X;
     private final int MAXIMUM_POSITION_X;
     private final int MINIMUM_POSITION_Y;
@@ -160,25 +160,15 @@ public class Model {
             //Nimmt das aktuelle Element element
             Punkt aktuell = punkte.get(i);
             //Nimmt das nächste Element, falls es schon das letzte element ist nimmt es das erste Element als Ziel.
-            Punkt nächste;
+            Punkt naechste;
             if (i + 1 < punkte.size() ) {
-                nächste = punkte.get(i + 1);
+                naechste = punkte.get(i + 1);
             } else {
-                nächste = punkte.getFirst();
+                naechste = punkte.getFirst();
             }
 
-            //Zwischenpunkt als hilfe für die liniengeneration. Wird nicht abgespeichert.
-            Zwischenpunkt mittel = new Zwischenpunkt((aktuell.getXPos() + nächste.getXPos()) / 2, (aktuell.getYPos() + nächste.getYPos()) / 2);
-
-            //Initialisierung eines Weg Arraylist welches die 4 Wege speichert.
-            ArrayList<Weg> wege = new ArrayList<>();
-
-            //Erstellung der 4 Wege von punkt aktuell zu Punkt nächste, mithilfe überladene Konstruktoren.
-            for (int j = 0; j < 4; j++) {
-                wege.add(new Straße(aktuell, nächste, mittel, j % 2 != 0, j / 2 == 0, j));
-            }
             //Hinzufügen der 4 Wege in einem Array zur generellen Arraylist.
-            this.wege.add(wege);
+            this.wege.add(new WegGruppe(aktuell, naechste));
         }
 
         /*
@@ -202,16 +192,12 @@ public class Model {
                 naechste = bahnhoefe.getFirst();
             }
 
-            ArrayList<Weg> wege = new ArrayList<>();
-            wege.add(new Schiene(aktuell, naechste));
-            this.wege.add(wege);
+            this.wege.add(new WegGruppe(aktuell, naechste));
         }
 
         //Zeichnen der Wege und Punkte
-        for (ArrayList<Weg> wegeArr : wege) {
-            for (Weg weg : wegeArr) {
-                root.getChildren().addAll(weg);
-            }
+        for (WegGruppe wegeArr : wege) {
+            root.getChildren().addAll(wegeArr.getWege());
         }
 
         root.getChildren().addAll(punkte);
@@ -365,7 +351,7 @@ public class Model {
      * @param ziel  Endpunkt
      * @return Arraylist mit Weg Objekte von denen weg.get(i).getStartX aufgerufen werden kann,
      */
-    public ArrayList<Weg> berechneWeg(Punkt start, Punkt ziel) {
+    /*public ArrayList<Weg> berechneWeg(Punkt start, Punkt ziel) {
         ArrayList<Weg> wegAusgabe = new ArrayList<>();
         ArrayList<Punkt> wegPunkte = new ArrayList<>();
         int i = punkte.lastIndexOf(start);
@@ -377,16 +363,14 @@ public class Model {
             }
         }
 
-        for (ArrayList<Weg> wegeArr : wege) {
-            for (Weg weg : wegeArr) {
-                for (Punkt p : wegPunkte) {
-                    if (weg.getStart() == p) {
-                        wegAusgabe.add(weg);
-                    }
+        for (WegGruppe wegeArr : wege) {
+            for (Punkt p : wegPunkte) {
+                if (p.getStart() == p) {
+                    wegAusgabe.add(weg);
                 }
             }
         }
 
         return wegAusgabe;
-    }
+    }*/
 }
