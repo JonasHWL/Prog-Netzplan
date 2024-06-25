@@ -1,22 +1,61 @@
 package com.example.line;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
-public class FensterController {
+public class FensterController implements Initializable {
+
 
     @FXML
     Stage test1;
     @FXML
     Parent root1;
+
+
+
+    @FXML
+    private TableColumn<Tabelle, String > name;
+    @FXML
+    private TableColumn<Tabelle, String> art;
+    @FXML
+    private TableColumn<Tabelle, String> posX;
+    @FXML
+    private TableColumn<Tabelle, String> posY;
+    @FXML
+    private TableView<Tabelle> tabelleCustom;
+
+
+    ObservableList<Tabelle> list = FXCollections.observableArrayList(
+            new Tabelle("Test","Test2","10", "4"),
+            new Tabelle("tetaf","Test2","10", "4"),
+            new Tabelle("teafafewa","Test2","10", "4")
+    );
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        name.setCellValueFactory(new PropertyValueFactory<Tabelle, String>("name"));
+        art.setCellValueFactory(new PropertyValueFactory<Tabelle, String>("art"));
+        posX.setCellValueFactory(new PropertyValueFactory<Tabelle, String>("posX"));
+        posY.setCellValueFactory(new PropertyValueFactory<Tabelle, String>("posY"));
+
+        tabelleCustom.setItems(list);
+    }
+
 
     @FXML
     public void uebergabe(Stage testS, Parent root){
