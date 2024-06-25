@@ -72,6 +72,15 @@ public class ControllerMenge {
     Button erstellen;
     Button customB;
 
+    /** Uebergabe ist eine Methode die communication zwischen 2 Controllern möglich macht und sachen zwischen diesen austauscht.
+     *
+     * @param pane übergabe
+     * @param P gibt an ob das Parkhaus als checkBox aktiviert ist
+     * @param Ba gibt an ob der Bahnhof als checkBox aktiviert ist
+     * @param Bu gibt an ob die Bushaltestellen als checkBox aktiviert ist
+     * @param eline gibt denn Eline Button an die neue Scene weiter
+     * @param custom gibt denn custom Button an die neue Scene weiter
+     */
     public void Uebernahme(AnchorPane pane, boolean P, boolean Ba, boolean Bu, Button eline, Button custom ){
         anchorPane = pane;
         erstellen = eline;
@@ -102,6 +111,10 @@ public class ControllerMenge {
         }
     }
 
+    /**
+     * hier werden die beiden Buttons die beim erstellen deaktiviert werden wieder aktiviert
+     *
+     */
     @FXML
     public void cancel(ActionEvent event) {
         erstellen.setDisable(false);

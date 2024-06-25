@@ -5,19 +5,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/18.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.line.FensterController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/18.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.line.ControllerCustomPunkte">
     <top>
         <Label fx:id="kopf" text="Eingabe Custom: " BorderPane.alignment="CENTER" />
     </top>
     <bottom>
         <HBox alignment="CENTER" prefHeight="55.0" prefWidth="300.0" BorderPane.alignment="CENTER">
             <children>
-                <Button onAction="#Abbrechen" mnemonicParsing="false" text="Abbrechen" textAlignment="CENTER">
+                <Button onAction="#zurueck" mnemonicParsing="false" text="Zurück" textAlignment="CENTER">
                     <HBox.margin>
                         <Insets right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button onAction="#Eingabe" mnemonicParsing="false" text="Eingabe" textAlignment="CENTER">
+                <Button onAction="#eingabe" mnemonicParsing="false" text="Eingabe" textAlignment="CENTER">
                     <HBox.margin>
                         <Insets top="10.0" />
                     </HBox.margin>
