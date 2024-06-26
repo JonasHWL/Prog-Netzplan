@@ -1,0 +1,11 @@
+Seed=55555
+Bushaltestelle[xPos=560.0, yPos=200.0]
+Parkhaus[xPos=80.0, yPos=320.0]
+Parkhaus[xPos=240.0, yPos=80.0]
+Parkhaus[xPos=120.0, yPos=40.0]
+Parkhaus[xPos=360.0, yPos=80.0]
+Bushaltestelle[xPos=320.0, yPos=280.0]
+Parkhaus[xPos=40.0, yPos=120.0]
+Bahnhof[xPos=560.0, yPos=80.0]
+Bahnhof[xPos=240.0, yPos=520.0]
+Bahnhof[xPos=40.0, yPos=320.0]
