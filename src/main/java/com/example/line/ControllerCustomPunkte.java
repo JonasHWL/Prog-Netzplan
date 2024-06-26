@@ -12,6 +12,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class ControllerCustomPunkte {
 
@@ -44,6 +46,11 @@ public class ControllerCustomPunkte {
     @FXML
     String art;
 
+    @FXML
+    public ArrayList<String> speicher;
+
+    int speicherD;
+
     /**
      * uebergabe ist eine Methode die communication zwischen 2 Controllern möglich macht und sachen zwischen diesen austauscht.
      *
@@ -53,12 +60,32 @@ public class ControllerCustomPunkte {
      * @param kopfzeile übergibt einen string der in der überschrift steht.
      */
     @FXML
-    public void uebergabe(Stage stage, Parent rootUE, Parent rootUE1, String kopfzeile){
-        test1 = stage;
-        root1 = rootUE;
-        root2 = rootUE1;
-        art = kopfzeile;
-        kopf.setText("Eingabe Custom: " + kopfzeile);
+    public void uebergabe(Stage stage, Parent rootUE, Parent rootUE1, String kopfzeile, ArrayList<String> speicherUE, int speicherDUE){
+        if(speicher == null){
+            loadSpeicher();
+        }
+        if(speicherUE != null){
+            for(int i = 0; i<speicherUE.size(); i++){
+                speicher.add(speicherUE.get(i));
+            }
+        }
+
+            speicherD = speicherDUE;
+            test1 = stage;
+            root1 = rootUE;
+            root2 = rootUE1;
+            art = kopfzeile;
+            kopf.setText("Eingabe Custom: " + kopfzeile);
+    }
+
+    @FXML
+    public void loadSpeicher() {
+        speicher = new ArrayList<>();
+        for(int i = 0; i <= 5;i++){
+            speicher.add("L");
+            //System.out.println(speicher.get(i));
+        }
+
     }
 
     Integer p1;
@@ -80,7 +107,8 @@ public class ControllerCustomPunkte {
             //hier werden die Pos1, Pos2 und der name in die ausgabe methode geschriebben.
             Uebergabe ue = new Uebergabe(p1, p2, n);
             try {
-                FensterController.einlesen(n,art,p1,p2);
+                FensterController fenster = new FensterController();
+                fenster.einlesen(n,art,p1,p2,speicher, speicherD);
                 model.benutzerDefinierterPunkt(p1, p2, 'p');
             } catch (PunktExistiertBereitsException e) {
                 Error.setText(e.getMessage());
@@ -115,6 +143,7 @@ public class ControllerCustomPunkte {
             test1.setScene(new Scene(root1));
         } catch (Exception e) {
             System.err.println("Scene konnte nicht gewechselt werden.");
+            e.printStackTrace();
         }
     }
 }

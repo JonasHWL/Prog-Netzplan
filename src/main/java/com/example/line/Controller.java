@@ -91,6 +91,8 @@ public class Controller {
         }
         catch (Exception e) {
             System.out.println("Fenster konnte nicht geladen werden");
+            e.printStackTrace();
+
         }
     }
 
