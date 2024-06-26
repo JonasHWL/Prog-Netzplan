@@ -3,30 +3,31 @@ package com.example.line;
 public class Tabelle {
 
 
-    String name, art, posx, posy;
+    String name, art;
+    int posX, posY;
 
 
     public String getName() {
         return name;
     }
 
-    public String getPosx() {
-        return posx;
+    public int getPosX() {
+        return posX;
     }
 
-    public String getPosy() {
-        return posy;
+    public int getPosY() {
+        return posY;
     }
 
     public String getArt() {
         return art;
     }
 
-    public Tabelle(String art, String name, String posx, String posy) {
+    public Tabelle(String art, String name, int posx, int posy) {
         this.art = art;
         this.name = name;
-        this.posx = posx;
-        this.posy = posy;
+        this.posX = posx;
+        this.posY = posy;
     }
 
 

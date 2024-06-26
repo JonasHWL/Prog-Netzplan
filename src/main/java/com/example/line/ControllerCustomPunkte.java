@@ -41,6 +41,8 @@ public class ControllerCustomPunkte {
     private TextField textField2;
     @FXML
     private TextField textField3;
+    @FXML
+    String art;
 
     /**
      * uebergabe ist eine Methode die communication zwischen 2 Controllern möglich macht und sachen zwischen diesen austauscht.
@@ -55,6 +57,7 @@ public class ControllerCustomPunkte {
         test1 = stage;
         root1 = rootUE;
         root2 = rootUE1;
+        art = kopfzeile;
         kopf.setText("Eingabe Custom: " + kopfzeile);
     }
 
@@ -77,14 +80,13 @@ public class ControllerCustomPunkte {
             //hier werden die Pos1, Pos2 und der name in die ausgabe methode geschriebben.
             Uebergabe ue = new Uebergabe(p1, p2, n);
             try {
+                FensterController.einlesen(n,art,p1,p2);
                 model.benutzerDefinierterPunkt(p1, p2, 'p');
             } catch (PunktExistiertBereitsException e) {
                 Error.setText(e.getMessage());
                 throw new RuntimeException(e);
             }
-            //Hier wird festgestellt in welcher Stage man sich grade befindet dafür guckt man wo das ActionEvent ausgeführt wurde
-            //und dann wird diese Stage in die Methode beenden() übergeben
-            Controller.beenden((Stage) ((Node) event.getSource()).getScene().getWindow());
+            wechsel();
         }
         catch (NumberFormatException e) {
             Error.setText("Ungültige Eingabe für Zahlen.");

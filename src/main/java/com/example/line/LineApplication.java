@@ -15,10 +15,13 @@ public class LineApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(LineApplication.class.getResource("line-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(getClass().getResource("MainCSS.css").toExternalForm());
+        try{
+            scene.getStylesheets().add(getClass().getResource("/MainCSS.css").toExternalForm());
+        }catch(NullPointerException e){
+            System.err.println("MainCSS.css wurde nicht erkannt!!!");
+        }
         stage.setScene(scene);
         stage.show();
-
     }
 
     public static void main(String[] args) {

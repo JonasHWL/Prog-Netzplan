@@ -35,6 +35,8 @@ public class ControllerMenge {
     Label anzahlBus;
     @FXML
     Label anzahlBahnhof;
+    @FXML
+    Label errorFeld;
 
     @FXML
     Integer anzahlFeld1;
@@ -58,7 +60,7 @@ public class ControllerMenge {
             }
         }
         catch(NumberFormatException e){
-            System.out.println("Bitte eine zahl eingeben");
+            errorFeld.setText("Bitte eine zahl eingeben");
         }
     }
 

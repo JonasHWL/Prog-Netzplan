@@ -27,31 +27,44 @@ public class FensterController implements Initializable {
     @FXML
     Parent root1;
 
+    @FXML
+    static String nameE;
+    @FXML
+    static String artE;
+    @FXML
+    static int posXE;
+    @FXML
+    static int posYE;
 
+    @FXML
+    public static void einlesen(String Name, String Art, int PosX, int PosY){
+        nameE = Name;
+        artE = Art;
+        posXE = PosX;
+        posYE = PosY;
+    };
 
     @FXML
     private TableColumn<Tabelle, String > name;
     @FXML
     private TableColumn<Tabelle, String> art;
     @FXML
-    private TableColumn<Tabelle, String> posX;
+    private TableColumn<Tabelle, Integer> posX;
     @FXML
-    private TableColumn<Tabelle, String> posY;
+    private TableColumn<Tabelle, Integer> posY;
     @FXML
     private TableView<Tabelle> tabelleCustom;
 
-
     ObservableList<Tabelle> list = FXCollections.observableArrayList(
-            new Tabelle("Test","Test2","10", "4"),
-            new Tabelle("tetaf","Test2","10", "4"),
-            new Tabelle("teafafewa","Test2","10", "4")
+            //TODO eine variable anzahl an tabellen felder und nicht immer das erste ersetzen.
+            new Tabelle(artE,nameE,posXE, posYE)
     );
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         name.setCellValueFactory(new PropertyValueFactory<Tabelle, String>("name"));
         art.setCellValueFactory(new PropertyValueFactory<Tabelle, String>("art"));
-        posX.setCellValueFactory(new PropertyValueFactory<Tabelle, String>("posX"));
-        posY.setCellValueFactory(new PropertyValueFactory<Tabelle, String>("posY"));
+        posX.setCellValueFactory(new PropertyValueFactory<Tabelle, Integer>("posX"));
+        posY.setCellValueFactory(new PropertyValueFactory<Tabelle, Integer>("posY"));
 
         tabelleCustom.setItems(list);
     }

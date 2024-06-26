@@ -17,8 +17,8 @@
             <TableView fx:id="tabelleCustom" editable="true" layoutX="314.0" layoutY="35.0" prefHeight="220.0" prefWidth="250.0">
               <columns>
                 <TableColumn fx:id="name" prefWidth="82.0" text="Name" />
-                <TableColumn fx:id="art" prefWidth="74.0" text="Art" />
-                  <TableColumn fx:id="posX" prefWidth="43.0" text="PosX" />
+                <TableColumn fx:id="art" prefWidth="75.0" text="Art" />
+                  <TableColumn fx:id="posX" prefWidth="44.0" text="PosX" />
                   <TableColumn fx:id="posY" prefWidth="44.0" text="PosY" />
               </columns>
             </TableView>
