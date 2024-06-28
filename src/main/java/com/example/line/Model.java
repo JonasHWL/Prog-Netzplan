@@ -267,6 +267,15 @@ public class Model {
     }
 
     /**
+     * Getter für alle Punkte.
+     *
+     * @return Arraylist mit allen aktuellen Punkten
+     */
+    public ArrayList<Punkt> getPunkte() {
+        return punkte;
+    }
+
+    /**
      * Erstellt eine .txt Datei welche Informationen zur Generation der Karte mitgibt.
      * Der Seed.
      * Die Anzahl von Punkten.
