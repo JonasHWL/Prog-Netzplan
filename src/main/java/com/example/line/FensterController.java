@@ -16,14 +16,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 public class FensterController implements Initializable {
-
-
 
 
     @FXML
@@ -32,33 +28,23 @@ public class FensterController implements Initializable {
     Parent root1;
 
     @FXML
-    static String E;
+    String nameeeE;
     @FXML
-    static String artE;
-    @FXML
-    static int posXE;
-    @FXML
-    static int posYE;
-
-    int speicherD;
-
+    String artE;
 
     @FXML
     public ArrayList<String> nameE;
+    @FXML
+    public ArrayList<String> artEE;
+    @FXML
+    public ArrayList<String> posXX;
+    @FXML
+    public ArrayList<String> posYY;
 
     @FXML
-    public ArrayList<String> speicher;
-
-    @FXML
-    public void einlesen(String Name, String Art, int PosX, int PosY,ArrayList<String>speicherUE, int speicherDUE){
-        speicherD = speicherDUE;
+    public void einlesen(String Name, String Art){
+        nameeeE = Name;
         artE = Art;
-        posXE = PosX;
-        posYE = PosY;
-        E = Name;
-        loadSpeicher();
-        speicher.addAll(speicherUE);
-
     };
 
     @FXML
@@ -66,35 +52,11 @@ public class FensterController implements Initializable {
     @FXML
     private TableColumn<Tabelle, String> art;
     @FXML
-    private TableColumn<Tabelle, Integer> posX;
+    private TableColumn<Tabelle, String> posX;
     @FXML
-    private TableColumn<Tabelle, Integer> posY;
+    private TableColumn<Tabelle, String> posY;
     @FXML
     private TableView<Tabelle> tabelleCustom;
-
-    @FXML
-    public void loadData() {
-        nameE = new ArrayList<>();
-        if(speicher == null){
-            loadSpeicher();
-        }
-        for(int i = 0; i <= 5;i++){
-            nameE.addAll(speicher);
-            //System.out.println(nameE.get(i));
-        }
-
-    }
-
-    @FXML
-    public void loadSpeicher() {
-        speicher = new ArrayList<>();
-        for(int i = 0; i <= 5;i++){
-            speicher.add("L");
-            speicherD = speicherD + 1;
-            //System.out.println(speicher.get(i));
-        }
-
-    }
 
     ObservableList<Tabelle> list = FXCollections.observableArrayList(
             //TODO eine variable anzahl an tabellen felder und nicht immer das erste ersetzen.
@@ -104,34 +66,65 @@ public class FensterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadData();
-        int zahl = 0;
-        String leer = "test";
-            //System.out.println("vor if "+ nameE.get(0));
-            if(nameE.get(6) == leer){
-                zahl = zahl + 7;
-                System.out.println(zahl);
+        Model m;
+        m = Model.getInstanz();
+        ArrayList<Punkt> customPunkte;
+        customPunkte = m.getPunkte();
+
+        if(customPunkte.size()>0){
+            for (int i = 0, j = 0; i < customPunkte.size(); i++, j++){
+
+                posXX.set(j, String.valueOf(customPunkte.get(j).getXPos()));
+                posYY.set(j, String.valueOf(customPunkte.get(j).getYPos()));
+                nameE.set(j, customPunkte.get(j).getName());
+                if( customPunkte.get(j) instanceof Bahnhof){
+                    artEE.set(j,"Bahnhof");
+                }
+                else if(customPunkte.get(j) instanceof Bushaltestelle){
+                    artEE.set(j, "Bushaltestelle");
+                }
+                else if(customPunkte.get(j) instanceof Parkhaus){
+                    artEE.set(j, "Parkhaus");
+                }
             }
-            System.out.println(nameE);
-            nameE.set(zahl , E);
+        }
+            list.addAll(new Tabelle(artEE.get(0), nameE.get(0) ,posXX.get(0),posYY.get(0)));
+            list.addAll(new Tabelle(artEE.get(1), nameE.get(1) ,posXX.get(1),posYY.get(1)));
+            list.addAll(new Tabelle(artEE.get(2), nameE.get(2) ,posXX.get(2),posYY.get(2)));
+            list.addAll(new Tabelle(artEE.get(3), nameE.get(3) ,posXX.get(3),posYY.get(3)));
+            list.addAll(new Tabelle(artEE.get(4), nameE.get(4) ,posXX.get(4),posYY.get(4)));
+            list.addAll(new Tabelle(artEE.get(5), nameE.get(5) ,posXX.get(5),posYY.get(5)));
+            list.addAll(new Tabelle(artEE.get(6), nameE.get(6) ,posXX.get(6),posYY.get(6)));
+            list.addAll(new Tabelle(artEE.get(7), nameE.get(7) ,posXX.get(7),posYY.get(7)));
 
-            System.out.println(speicher);
-
-            //System.out.println("nach if "+ nameE.get(1));
-            speicher.addAll(nameE);
-            System.out.println(speicher);
-            System.out.println(speicher.get(6));
-            list.addAll(new Tabelle(artE, nameE.get(0),posXE,posYE));
-            list.addAll(new Tabelle(artE, nameE.get(1),posXE,posYE));
-            list.addAll(new Tabelle(artE, nameE.get(2),posXE,posYE));
             name.setCellValueFactory(new PropertyValueFactory<Tabelle, String>("name"));
             art.setCellValueFactory(new PropertyValueFactory<Tabelle, String>("art"));
-            posX.setCellValueFactory(new PropertyValueFactory<Tabelle, Integer>("posX"));
-            posY.setCellValueFactory(new PropertyValueFactory<Tabelle, Integer>("posY"));
+            posX.setCellValueFactory(new PropertyValueFactory<Tabelle, String>("posX"));
+            posY.setCellValueFactory(new PropertyValueFactory<Tabelle, String>("posY"));
 
             tabelleCustom.setItems(list);
     }
 
 
+    @FXML
+    public void loadData() {
+        nameE = new ArrayList<>();
+        for(int i = 0; i <= 8;i++){
+            nameE.add(" ");
+        }
+        posXX = new ArrayList<>();
+        for (int i = 0; i <= 8;i++){
+            posXX.add(" ");
+        }
+        posYY = new ArrayList<>();
+        for (int i = 0; i <= 8;i++){
+            posYY.add(" ");
+        }
+        artEE = new ArrayList<>();
+        for (int i = 0; i <= 8;i++){
+            artEE.add(" ");
+        }
+    }
 
     @FXML
     public void uebergabe(Stage testS, Parent root){
@@ -170,12 +163,17 @@ public class FensterController implements Initializable {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("eingabe-view.fxml"));
                 Parent root2 = fxmlLoader.load();
                 ControllerCustomPunkte controllerCustomPunkte = fxmlLoader.getController();
-                controllerCustomPunkte.uebergabe(test1, root1, root2, kopfzeile, speicher, speicherD);
+                controllerCustomPunkte.uebergabe(test1, root1, root2, kopfzeile);
                 test1.setScene(new Scene(root2));
             }catch (IOException e){
-
                 System.out.println("Scene konnte nicht gewechselt werden.");
-
             }
+    }
+
+    @FXML
+    public void apply(ActionEvent event) throws IOException {
+        //Hier wird festgestellt in welcher Stage man sich grade befindet dafür guckt man wo das ActionEvent ausgeführt wurde
+        //und dann wird diese Stage in die Methode beenden() übergeben
+        Controller.beenden((Stage) ((Node) event.getSource()).getScene().getWindow());
     }
 }

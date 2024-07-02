@@ -16,8 +16,8 @@ public class Parkhaus extends Punkt{
      * @param xPos X-Position vom Parkhaus
      * @param yPos Y-Position vom Parkhaus
      */
-    Parkhaus(double xPos, double yPos) {
-        super(xPos, yPos, Color.RED);
+    Parkhaus(double xPos, double yPos, String name) {
+        super(xPos, yPos, Color.RED, name);
     }
 
     /**

@@ -1,17 +1,23 @@
+
 package com.example.line;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.util.ArrayList;
+
 /**
  * Punkte die auf der Benutzeroberfläche erscheinen.
  *
  * @author Amel Aho
- * @version 07.06.2024
+ * @version 20.06.2024
  */
 public abstract class Punkt extends Circle {
+    private final String name;
     private final double xPos;
     private final double yPos;
+    private boolean custom;
+    private final ArrayList<WegGruppe> wegGruppen;
 
     /**
      * Konstruktor für die Punkte.
@@ -20,10 +26,13 @@ public abstract class Punkt extends Circle {
      * @param yPos  Y-Position des Punkts
      * @param farbe Farbe des Punkts
      */
-    Punkt(double xPos, double yPos, Color farbe) {
+    Punkt(double xPos, double yPos, Color farbe, String name) {
         super(xPos, yPos, 5, farbe);
         this.xPos = xPos;
         this.yPos = yPos;
+        this.name = name;
+        custom = false;
+        wegGruppen = new ArrayList<>();
     }
 
     /**
@@ -44,22 +53,31 @@ public abstract class Punkt extends Circle {
 
     /**
      * Gibt alle Instanzvariablen als String aus
-     * @return Instanzvariablen als String
-     */
-    @Override
-    public String toString() {
-        return "Punkt[" + "xPos=" + xPos +
-                ", yPos=" + yPos +
-                "]";
-    }
-
-    /**
-     * Gibt alle Instanzvariablen als String aus
      * @param datentyp Datentyp, des Objects
      * @return Instanzvariablen als String
      */
     protected String toString(String datentyp) {
-        return datentyp + "[" + "xPos=" + xPos +
+        return datentyp + "[" + "Name=" + name + ", xPos=" + xPos +
                 ", yPos=" + yPos + "]";
+    }
+
+    public boolean isCustom() {
+        return custom;
+    }
+
+    public void setCustom(boolean custom) {
+        this.custom = custom;
+    }
+
+    public void addWeggruppe(WegGruppe wegGruppe) {
+        wegGruppen.add(wegGruppe);
+    }
+
+    public ArrayList<WegGruppe> getWegGruppen() {
+        return wegGruppen;
+    }
+
+    public String getName() {
+        return name;
     }
 }

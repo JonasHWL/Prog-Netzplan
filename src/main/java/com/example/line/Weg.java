@@ -7,7 +7,7 @@ import javafx.scene.shape.Line;
  * Klasse für die Wege welche auf der Benutzeroberfläche angezeigt werden.
  *
  * @author Amel Aho
- * @version 07.06.2024
+ * @version 20.06.2024
  */
 public abstract class Weg extends Line {
     private boolean horizontal = false;
@@ -18,35 +18,36 @@ public abstract class Weg extends Line {
     private final double endeY;
     private final Color farbe;
     private final int schritt;
+    private final Punkt start;
 
     Weg(Punkt start, Punkt ende, Zwischenpunkt mitte, Color farbe, boolean horizontal, boolean zuMitte, int schritt) {
         super(
-                zuMitte ? //Für Line StartX
-                        start.getXPos() : //zuMitte true
-                        mitte.getXPos(), //zuMitte false
+            zuMitte ? //Für Line StartX
+                start.getXPos() : //zuMitte true
+                mitte.getXPos(), //zuMitte false
 
-                horizontal ? //Fur Line StartY
-                        zuMitte ? //Horizontal true
-                                mitte.getYPos() : //zuMitte true
-                                ende.getYPos() //zzMitte false
-                        : zuMitte ? //Horizontal false
-                        start.getYPos() : //zuMitte true
-                        mitte.getYPos(), //zuMitte false
+            horizontal ? //Fur Line StartY
+                zuMitte ? //Horizontal true
+                    mitte.getYPos() : //zuMitte true
+                    ende.getYPos() //zzMitte false
+                : zuMitte ? //Horizontal false
+                    start.getYPos() : //zuMitte true
+                    mitte.getYPos(), //zuMitte false
 
-                horizontal ? //Fur Line EndX
-                        zuMitte ? //Horizontal true
-                                mitte.getXPos() : //zuMitte true
-                                ende.getXPos() //zzMitte false
-                        : zuMitte ? //Horizontal false
-                        start.getXPos() : //zuMitte true
-                        mitte.getXPos(), //zuMitte false
+            horizontal ? //Fur Line EndX
+                zuMitte ? //Horizontal true
+                    mitte.getXPos() : //zuMitte true
+                    ende.getXPos() //zuMitte false
+                : zuMitte ? //Horizontal false
+                    start.getXPos() : //zuMitte true
+                    mitte.getXPos(), //zuMitte false
 
-
-                zuMitte ? //Für Line EndY
-                        mitte.getYPos() : //zuMitte true
-                        ende.getYPos()//zuMitte false
+            zuMitte ? //Für Line EndY
+                mitte.getYPos() : //zuMitte true
+                ende.getYPos()//zuMitte false
         );
 
+        this.start = start;
         this.startX = super.getStartX();
         this.startY = super.getStartY();
         this.endeX = super.getEndX();
@@ -69,6 +70,8 @@ public abstract class Weg extends Line {
         this.schritt = 0;
         super.setStroke(farbe);
         super.setStrokeWidth(2);
+
+        this.start = start;
     }
 
     /**
@@ -105,5 +108,9 @@ public abstract class Weg extends Line {
                 ", zuMitte=" + zuMitte +
                 ", Schritt=" + schritt +
                 "]";
+    }
+
+    public Punkt getStart() {
+        return this.start;
     }
 }

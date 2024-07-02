@@ -29,7 +29,7 @@
       <AnchorPane prefHeight="75.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <Button layoutX="213.0" layoutY="25.0" mnemonicParsing="false" onAction="#abbrechen" text="Abbrechen" />
-            <Button fx:id="Apply" layoutX="316.0" layoutY="25.0" mnemonicParsing="false" text="Bestätigen" />
+            <Button onAction="#apply" layoutX="316.0" layoutY="25.0" mnemonicParsing="false" text="Bestätigen" />
          </children>
       </AnchorPane>
    </bottom>

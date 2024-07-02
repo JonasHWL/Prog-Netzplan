@@ -15,7 +15,7 @@ public class ControllerMenge {
 
     @FXML
     void initialize() {
-        model = Model.getInstance();
+        model = Model.getInstanz();
     }
 
     @FXML
@@ -88,8 +88,8 @@ public class ControllerMenge {
         erstellen = eline;
         customB = custom;
         if(!P){
-            //TODO muss noch auf 0 gesetzt werden
-            eingabeZahlParkhaus.setText("2");
+
+            eingabeZahlParkhaus.setText("0");
             anzahlParkplatz.setDisable(true);
             eingabeZahlParkhaus.setDisable(true);
             anzahlParkplatz.setVisible(false);
@@ -97,7 +97,7 @@ public class ControllerMenge {
         }
         if(!Ba){
             //TODO muss noch auf 0 gesetzt werden
-            eingabeZahlBus.setText("2");
+            eingabeZahlBus.setText("0");
             anzahlBus.setDisable(true);
             eingabeZahlBus.setDisable(true);
             anzahlBus.setVisible(false);
@@ -105,7 +105,7 @@ public class ControllerMenge {
         }
         if(!Bu){
             //TODO muss noch auf 0 gesetzt werden
-            eingabeZahlBahnhof.setText("2");
+            eingabeZahlBahnhof.setText("0");
             anzahlBahnhof.setDisable(true);
             eingabeZahlBahnhof.setDisable(true);
             anzahlBahnhof.setVisible(false);

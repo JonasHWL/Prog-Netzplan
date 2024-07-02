@@ -1,14 +1,8 @@
 package com.example.line;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.*;
@@ -19,43 +13,58 @@ import java.io.IOException;
  * Erstellt die verschiedene Punkte und dazugehörigen Wege die dargestellt werden sollen.
  *
  * @author Amel Aho
- * @version 11.06.2024
+ * @version 20.06.2024
  */
 public class Model {
-    private static Model instance;
+    private static Model instanz;
     private long seed;
     private Random rand;
     private final ArrayList<Punkt> punkte = new ArrayList<>();
-    private final ArrayList<Bahnhof> bahnhöfe = new ArrayList<>();
-    private final HashSet<String> koordinaten= new HashSet<>();
-    //private ArrayList<Fahrzeug> fahrzeuge = new ArrayList<Fahrzeug>();
-    private final ArrayList<ArrayList<Weg>> wege= new ArrayList<>();
+    private final HashSet<Koordinaten> koordinaten= new HashSet<>();
+    private final ArrayList<WegGruppe> wege= new ArrayList<>();
+    private final int MINIMUM_POSITION_X;
+    private final int MAXIMUM_POSITION_X;
+    private final int MINIMUM_POSITION_Y;
+    private final int MAXIMUM_POSITION_Y;
+    private final int POSITION_MULTIPLIKATOR_X;
+    private final int POSITION_MULTIPLIKATOR_Y;
 
     /**
      * Konstruktor für das Model.
      */
     private Model() {
-        //Default Seed
-        this.seed = 9223372036854775807L;
+        //Default Seed 9223372036854775807L
+        this.seed = 55555;
         this.rand = new Random(seed);
 
-        /*
-        4 4 cus1
-        14 14 cus2
-        6 10 cus3
-        */
+        this.MINIMUM_POSITION_X = 1;
+        this.MAXIMUM_POSITION_X = 16;
+        this.MINIMUM_POSITION_Y = 1;
+        this.MAXIMUM_POSITION_Y = 16;
+        this.POSITION_MULTIPLIKATOR_X = 40;
+        this.POSITION_MULTIPLIKATOR_Y = 40;
+
+        //ACHTUNG Limit der Punkten ist MAXIMUM_POSITION_X * MAXIMUM_POSITION_Y
     }
 
     /**
      * Gibt die aktuelle Instanz vom Model Objekt
      * @return Das model Objekt
      */
-    public static Model getInstance(){
-        if (instance == null){
-            instance = new Model();
+    public static Model getInstanz(){
+        if (instanz == null){
+            instanz = new Model();
         }
-        return instance;
+        return instanz;
     }
+
+    /**
+     * Koordinaten welche in einem HashSet gespeichert werden, um doppelte Koordinaten zu verhindern.
+     *
+     * @param xPos X-Position des Punkts
+     * @param yPos Y-Position des Punkts
+     */
+    record Koordinaten(int xPos, int yPos){}
 
     /**
      * Erstellt die fehlenden Punkte und generiert die Wege.
@@ -69,7 +78,16 @@ public class Model {
     public void generiere(Pane root ,int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof) {
         generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
         erstelleStraßen(root);
+        System.out.println(punkte.getFirst());
+        System.out.println(punkte.get(8));
+        berechneWeg2(punkte.get(1), punkte.get(8), true);
+        System.out.println("Weg2");
+        ArrayList<Weg> wegAusgabe = berechneWeg(punkte.get(1), punkte.get(8));
+        for(Weg weg : wegAusgabe){
+            System.out.println(weg.toString());
+        }
     }
+
     /**
      * Setter für seed
      *
@@ -90,33 +108,51 @@ public class Model {
      * @param anzahlBahnhöfe Anzahl der zu erstellenden Punkte
      */
     private void generierePunkte(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhöfe) {
+        final int ANFANG_VON_PUNKTE_ARRAYLIST = 0;
 
         while (koordinaten.size() < anzahlParkhaus) {
-            int xPos = rand.nextInt(1, 15);
-            int yPos = rand.nextInt(1,15);
-            if(!koordinaten.contains(String.valueOf(xPos + yPos))){
-                koordinaten.add(String.valueOf(xPos + yPos));
-                punkte.add(new Parkhaus(xPos*40, yPos*40));
+            int xPos = rand.nextInt(MINIMUM_POSITION_X, MAXIMUM_POSITION_X) * POSITION_MULTIPLIKATOR_X;
+            int yPos = rand.nextInt(MINIMUM_POSITION_Y, MAXIMUM_POSITION_Y) * POSITION_MULTIPLIKATOR_Y;
+
+            Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
+
+            if(!koordinaten.contains(neueKoordinaten)){
+                koordinaten.add(neueKoordinaten);
+                punkte.add(new Parkhaus(xPos, yPos, "Parkhaus"));
             }
         }
 
         //Generation für Bushaltestellen
         while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen){
-            int xPos = rand.nextInt(1, 15);
-            int yPos = rand.nextInt(1,15);
-            if(!koordinaten.contains(String.valueOf(yPos + xPos))){
-                koordinaten.add(String.valueOf(yPos + xPos));
-                punkte.add(rand.nextInt(0, punkte.size()), new Bushaltestelle(xPos * 40, yPos * 40));
+            int xPos = rand.nextInt(MINIMUM_POSITION_X, MAXIMUM_POSITION_X) * POSITION_MULTIPLIKATOR_X;
+            int yPos = rand.nextInt(MINIMUM_POSITION_Y, MAXIMUM_POSITION_Y) * POSITION_MULTIPLIKATOR_Y;
+
+            Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
+
+            if(!koordinaten.contains(neueKoordinaten)){
+                koordinaten.add(neueKoordinaten);
+                if (!punkte.isEmpty()) {
+                    punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bushaltestelle(xPos, yPos, "Bushaltestelle"));
+                } else {
+                    punkte.add(new Bushaltestelle(xPos, yPos, "Bushaltestelle"));
+                }
             }
         }
 
         //Generation für Bahnhof
         while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen+anzahlBahnhöfe){
-            int xPos = rand.nextInt(1, 15);
-            int yPos = rand.nextInt(1,15);
-            if(!koordinaten.contains(String.valueOf(yPos + xPos))){
-                koordinaten.add(String.valueOf(yPos + xPos));
-                bahnhöfe.add(new Bahnhof(xPos*40, yPos*40));
+            int xPos = rand.nextInt(MINIMUM_POSITION_X, MAXIMUM_POSITION_X) * POSITION_MULTIPLIKATOR_X;
+            int yPos = rand.nextInt(MINIMUM_POSITION_Y, MAXIMUM_POSITION_Y) * POSITION_MULTIPLIKATOR_Y;
+
+            Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
+
+            if(!koordinaten.contains(neueKoordinaten)){
+                koordinaten.add(neueKoordinaten);
+                if (!punkte.isEmpty()) {
+                    punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bahnhof(xPos, yPos, "Bahnhof"));
+                } else {
+                    punkte.add(new Bahnhof(xPos, yPos, "Bahnhof"));
+                }
             }
         }
     }
@@ -133,51 +169,53 @@ public class Model {
             //Nimmt das aktuelle Element element
             Punkt aktuell = punkte.get(i);
             //Nimmt das nächste Element, falls es schon das letzte element ist nimmt es das erste Element als Ziel.
-            Punkt nächste;
+            Punkt naechste;
             if (i + 1 < punkte.size() ) {
-                nächste = punkte.get(i + 1);
+                naechste = punkte.get(i + 1);
             } else {
-                nächste = punkte.getFirst();
+                naechste = punkte.getFirst();
             }
 
-            //Zwischenpunkt als hilfe für die liniengeneration. Wird nicht abgespeichert.
-            Zwischenpunkt mittel = new Zwischenpunkt((aktuell.getXPos() + nächste.getXPos()) / 2, (aktuell.getYPos() + nächste.getYPos()) / 2);
-
-            //Initialisierung eines Weg Arraylist welches die 4 Wege speichert.
-            ArrayList<Weg> wege = new ArrayList<>();
-
-            //Erstellung der 4 Wege von punkt aktuell zu Punkt nächste, mithilfe überladene Konstruktoren.
-            for (int j = 0; j < 4; j++) {
-                wege.add(new Straße(aktuell, nächste, mittel, j % 2 != 0, j / 2 == 0, j));
-            }
             //Hinzufügen der 4 Wege in einem Array zur generellen Arraylist.
-            this.wege.add(wege);
+            WegGruppe wegGruppe = new WegGruppe(aktuell, naechste);
+            this.wege.add(wegGruppe);
+            aktuell.addWeggruppe(wegGruppe);
+            naechste.addWeggruppe(wegGruppe);
         }
 
-        //Durchgehen vom Bahnhöfe array
-        for (int i = 0; i < bahnhöfe.size(); i++) {
-            Bahnhof aktuell = bahnhöfe.get(i);
-            Bahnhof nächste;
-            if (i + 1 < bahnhöfe.size() ) {
-                nächste = bahnhöfe.get(i + 1);
-            } else {
-                nächste = bahnhöfe.getFirst();
+        /*
+        Erstellung vom Netz für die Bahnhöfe
+        Laufzeit O(n)
+         */
+        ArrayList<Bahnhof> bahnhoefe = new ArrayList<>();
+        for (Punkt punkt : punkte) {
+            if (punkt instanceof Bahnhof) {
+                bahnhoefe.add((Bahnhof) punkt);
             }
-            ArrayList<Weg> wege = new ArrayList<>();
-            wege.add(new Schiene(aktuell, nächste));
-            this.wege.add(wege);
+        }
+
+        for (int i = 0; i < bahnhoefe.size(); i++) {
+            Bahnhof aktuell = bahnhoefe.get(i);
+            //Nimmt das nächste Element, falls es schon das letzte element ist nimmt es das erste Element als Ziel.
+            Bahnhof naechste;
+            if (i + 1 < bahnhoefe.size()) {
+                naechste = bahnhoefe.get(i + 1);
+            } else {
+                naechste = bahnhoefe.getFirst();
+            }
+
+            WegGruppe wegGruppe = new WegGruppe(aktuell, naechste);
+            this.wege.add(wegGruppe);
+            aktuell.addWeggruppe(wegGruppe);
+            naechste.addWeggruppe(wegGruppe);
         }
 
         //Zeichnen der Wege und Punkte
-        for (ArrayList<Weg> wegeArr : wege) {
-            for (Weg weg : wegeArr) {
-                //System.out.println(weg.toString());
-                root.getChildren().addAll(weg);
-            }
+        for (WegGruppe wegeArr : wege) {
+            root.getChildren().addAll(wegeArr.getWege());
         }
 
         root.getChildren().addAll(punkte);
-        root.getChildren().addAll(bahnhöfe);
     }
 
     /**
@@ -187,28 +225,37 @@ public class Model {
      * @param datentyp Ob es Parkhaus 'p', Bushaltestelle 'b' oder Bahnhof 'z' ist
      * @throws PunktExistiertBereitsException Falls die Koordinaten schon belegt sind.
      */
-    public void benutzerDefinierterPunkt(int xPos, int yPos, char datentyp) throws PunktExistiertBereitsException {
+    public void benutzerDefinierterPunkt(int xPos, int yPos, String name ,char datentyp) throws PunktExistiertBereitsException {
+        xPos *= POSITION_MULTIPLIKATOR_X;
+        yPos *= POSITION_MULTIPLIKATOR_Y;
+        Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
         switch (datentyp) {
             case 'p' :
-                if(!koordinaten.contains(String.valueOf(xPos + yPos))){
-                    koordinaten.add(String.valueOf(xPos + yPos));
-                    punkte.add(new Parkhaus(xPos*40, yPos*40));
+                if(!koordinaten.contains(neueKoordinaten)){
+                    koordinaten.add(neueKoordinaten);
+                    Parkhaus parkhaus = new Parkhaus(xPos, yPos, name);
+                    punkte.add(parkhaus);
+                    parkhaus.setCustom(true);
                 } else {
                     throw new PunktExistiertBereitsException("Diese Koordinaten sind belegt!");
                 }
                 break;
             case 'b' :
-                if(!koordinaten.contains(String.valueOf(xPos + yPos))){
-                    koordinaten.add(String.valueOf(xPos + yPos));
-                    punkte.add(new Bushaltestelle(xPos*40, yPos*40));
+                if(!koordinaten.contains(neueKoordinaten)){
+                    koordinaten.add(neueKoordinaten);
+                    Bushaltestelle bushaltestelle = new Bushaltestelle(xPos, yPos, name);
+                    punkte.add(bushaltestelle);
+                    bushaltestelle.setCustom(true);
                 } else {
                     throw new PunktExistiertBereitsException("Diese Koordinaten sind belegt!");
                 }
                 break;
             case 'z' :
-                if(!koordinaten.contains(String.valueOf(xPos + yPos))){
-                    koordinaten.add(String.valueOf(xPos + yPos));
-                    bahnhöfe.add(new Bahnhof(xPos*40, yPos*40));
+                if(!koordinaten.contains(neueKoordinaten)){
+                    koordinaten.add(neueKoordinaten);
+                    Bahnhof bahnhof = new Bahnhof(xPos, yPos, name);
+                    punkte.add(bahnhof);
+                    bahnhof.setCustom(true);
                 } else {
                     throw new PunktExistiertBereitsException("Diese Koordinaten sind belegt!");
                 }
@@ -216,7 +263,29 @@ public class Model {
         }
     }
 
+    /**
+     * Gibt ein ArrayList mit allen Custom generierten Punkten zurück.
+     *
+     * @return ArrayList mit Custom generierten Punkten.
+     */
+    public ArrayList<Punkt> getCustomPunkte() {
+        ArrayList<Punkt> customPunkte = new ArrayList<>();
+        for (Punkt punkt : punkte) {
+            if (punkt.isCustom()) {
+                customPunkte.add(punkt);
+            }
+        }
+        return customPunkte;
+    }
 
+    /**
+     * Getter für alle Punkte.
+     *
+     * @return Arraylist mit allen aktuellen Punkten
+     */
+    public ArrayList<Punkt> getPunkte() {
+        return punkte;
+    }
 
     /**
      * Erstellt eine .txt Datei welche Informationen zur Generation der Karte mitgibt.
@@ -243,9 +312,6 @@ public class Model {
             schreiber.write("Seed=" + seed +"\n");
             for (Punkt punkt : punkte) {
                 schreiber.write(punkt.toString() +"\n");
-            }
-            for (Bahnhof bahnhof : bahnhöfe){
-                schreiber.write(bahnhof.toString() +"\n");
             }
             schreiber.close();
             System.out.println("Erfolgreich die Daten exportiert");
@@ -290,15 +356,183 @@ public class Model {
      */
     private void searchImport(String zeile, String datentyp) {
         if (zeile.contains(datentyp + "[")) {
+            String name = zeile.split("Name=")[1].split(",")[0];
             double xPos = Double.parseDouble(zeile.split("xPos=")[1].split(",")[0]);
             double yPos = Double.parseDouble(zeile.split("yPos=")[1].split("]")[0]);
+            //TODO Name berücksichtigen.
+
             if (Objects.equals(datentyp, "Parkhaus")) {
-                punkte.add(new Parkhaus(xPos, yPos));
+                punkte.add(new Parkhaus(xPos, yPos, name));
             } else if (Objects.equals(datentyp, "Bushaltestelle")) {
-                punkte.add(new Bushaltestelle(xPos, yPos));
+                punkte.add(new Bushaltestelle(xPos, yPos, name));
             } else if (Objects.equals(datentyp, "Bahnhof")) {
-                bahnhöfe.add(new Bahnhof(xPos, yPos));
+                punkte.add(new Bahnhof(xPos, yPos, name));
             }
         }
+    }
+
+    //TODO Wegberechnung verbessern
+    /**
+     * Experimental! Fehlerhaft! Nicht Verwenden außer für Testzwecke
+     * bestimmt alle Weg Objekte welche benötigt werden, um die Koordinaten für die Fahrzeuge zu bestimmen.
+     *
+     * @param start Startpunkt
+     * @param ziel  Endpunkt
+     * @return Arraylist mit Weg Objekte von denen weg.get(i).getStartX aufgerufen werden kann,
+     */
+    private ArrayList<Weg> berechneWeg2(Punkt start, Punkt ziel, boolean normalfolge) {
+        ArrayList<Weg> wegAusgabe = new ArrayList<>();
+        ArrayList<Punkt> wegPunkte = new ArrayList<>();
+        if(normalfolge){
+            int i = punkte.lastIndexOf(start);
+            int j = punkte.lastIndexOf(ziel);
+            wegPunkte.add(start);
+            if (i != -1 && j != -1) {
+                while (i < j) {
+                    wegPunkte.add(punkte.get(i++));
+                }
+            }
+
+            for (WegGruppe weg : wege) {
+                if(weg.getWege().size() == 4){
+                    for (Weg p : weg.getWege()) {
+                        if(wegPunkte.contains(weg.getStartPunkt())){
+                            System.out.println(p);
+                            wegAusgabe.add(p);
+                        }
+                    }
+                }
+            }
+        } else {
+            //TODO Rückwärts berechnung
+        }
+
+        return wegAusgabe;
+    }
+
+
+    //TODO Breitensuche verbessern
+
+    /**
+     * Experimental! Fehlerhaft! Nicht Verwenden außer für Testzwecke
+     *
+     * @param start Startpunkt
+     * @param ende Endpunk
+     * @return Wege die gefahren werden müssen
+     */
+    private ArrayList<Weg> berechneWeg(Punkt start, Punkt ende){
+        ArrayList<Weg> wegAusgabe = new ArrayList<>();
+
+        class Node {
+            // vargaenger = pi
+            Node vorgaenger;
+            static int entfernung;
+            // startpunktEntfernung = d
+            int startpunktEntfernung;
+            final Punkt punkt;
+            static int idZaeler;
+            final int id;
+            Color farbe;
+
+            // node = u
+            Node(Punkt punkt){
+                this.punkt = punkt;
+                this.id = idZaeler++;
+                this.farbe = Color.WHITE;
+                this.startpunktEntfernung = 0;
+                this.vorgaenger = this;
+            }
+        }
+
+        //nodes = G.V
+        ArrayList<Node> nodes = new ArrayList<>();
+        for(Punkt punkt : punkte){
+            nodes.add(new Node(punkt));
+        }
+
+        Node startNode = null;
+        for(Node node : nodes){
+            if(node.punkt == start){
+                startNode = node;
+                break;
+            }
+        }
+
+        if (startNode == null){
+            throw new IllegalStateException("Fehlender Punkt start Parameter");
+        }
+
+        startNode.farbe = Color.gray;
+        startNode.startpunktEntfernung = 0;
+        startNode.vorgaenger = startNode;
+
+        LinkedList<Node> queue = new LinkedList<>();
+        queue.add(startNode);
+
+
+
+        while(!queue.isEmpty()){
+            Node u = queue.pop();
+            for(int i = 0; i < u.punkt.getWegGruppen().size(); i++){
+                if(u.punkt.getWegGruppen().get(i).getStartPunkt() == u.punkt){
+                    Punkt tempPunkt = u.punkt.getWegGruppen().get(i).getEndPunkt();
+                    for( Node node : nodes){
+                        if(node.punkt == tempPunkt){
+                            if(node.farbe == Color.WHITE){
+                                node.farbe = Color.GRAY;
+                                node.startpunktEntfernung = u.startpunktEntfernung + 1;
+                                node.vorgaenger = u;
+                                queue.add(node);
+                            }
+                        }
+                    }
+                }
+            }
+            u.farbe = Color.BLACK;
+        }
+
+        System.out.println("Loool");
+
+        Node endeNode;
+        endeNode = null;
+        for(Node node : nodes){
+            if(node.punkt == ende){
+                endeNode = node;
+                break;
+            }
+        }
+
+        if (endeNode == null){
+            throw new IllegalStateException("Fehlender Punkt start Parameter");
+        }
+
+        int counter = 0;
+        Node aktuellerNode = endeNode;
+        Node letzterNode = null;
+        while(aktuellerNode.vorgaenger != aktuellerNode){
+            for(WegGruppe wegGruppe : aktuellerNode.punkt.getWegGruppen()){
+                if(aktuellerNode.vorgaenger.punkt == wegGruppe.getStartPunkt()){
+                    wegAusgabe.addAll(wegGruppe.getWege());
+                    counter++;
+                    break;
+                }
+            }
+            letzterNode = aktuellerNode;
+            aktuellerNode = aktuellerNode.vorgaenger;
+        }
+        for(WegGruppe wegGruppe : aktuellerNode.punkt.getWegGruppen()){
+            assert letzterNode != null;
+            if(letzterNode.punkt == wegGruppe.getStartPunkt()){
+                wegAusgabe.addAll(wegGruppe.getWege());
+                counter++;
+                break;
+            }
+        }
+
+
+        System.out.println("Kek");
+        System.out.println(counter);
+
+        return wegAusgabe;
     }
 }

@@ -6,10 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class Controller {
 
     @FXML
     void initialize() {
-        model = Model.getInstance();
+        model = Model.getInstanz();
     }
 
     @FXML
@@ -91,7 +91,7 @@ public class Controller {
         }
         catch (Exception e) {
             System.out.println("Fenster konnte nicht geladen werden");
-            e.printStackTrace();
+           // e.printStackTrace();
 
         }
     }

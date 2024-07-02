@@ -1,21 +1,23 @@
 package com.example.line;
 
+import java.util.ArrayList;
+
 public class Tabelle {
 
 
     String name, art;
-    int posX, posY;
+    String posX, posY;
 
 
     public String getName() {
         return name;
     }
 
-    public int getPosX() {
+    public String getPosX() {
         return posX;
     }
 
-    public int getPosY() {
+    public String getPosY() {
         return posY;
     }
 
@@ -23,7 +25,7 @@ public class Tabelle {
         return art;
     }
 
-    public Tabelle(String art, String name, int posx, int posy) {
+    public Tabelle(String art, String name, String posx, String posy) {
         this.art = art;
         this.name = name;
         this.posX = posx;
