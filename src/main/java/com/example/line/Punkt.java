@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * @version 20.06.2024
  */
 public abstract class Punkt extends Circle {
+    private final String name;
     private final double xPos;
     private final double yPos;
     private boolean custom;
@@ -24,10 +25,11 @@ public abstract class Punkt extends Circle {
      * @param yPos  Y-Position des Punkts
      * @param farbe Farbe des Punkts
      */
-    Punkt(double xPos, double yPos, Color farbe) {
+    Punkt(double xPos, double yPos, Color farbe, String name) {
         super(xPos, yPos, 5, farbe);
         this.xPos = xPos;
         this.yPos = yPos;
+        this.name = name;
         custom = false;
         wegGruppen = new ArrayList<>();
     }
@@ -54,7 +56,7 @@ public abstract class Punkt extends Circle {
      * @return Instanzvariablen als String
      */
     protected String toString(String datentyp) {
-        return datentyp + "[" + "xPos=" + xPos +
+        return datentyp + "[" + "Name=" + name + ", xPos=" + xPos +
                 ", yPos=" + yPos + "]";
     }
 
@@ -72,5 +74,9 @@ public abstract class Punkt extends Circle {
 
     public ArrayList<WegGruppe> getWegGruppen() {
         return wegGruppen;
+    }
+
+    public String getName() {
+        return name;
     }
 }

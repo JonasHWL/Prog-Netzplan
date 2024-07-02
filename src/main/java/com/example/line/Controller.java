@@ -94,7 +94,8 @@ public class Controller {
             //hier werden die Pos1, Pos2 und der name in die ausgabe methode geschriebben.
             Uebergabe ue = new Uebergabe(p1, p2, n);
             try {
-                model.benutzerDefinierterPunkt(p1, p2, 'p');
+                //TODO Name als parameter
+                model.benutzerDefinierterPunkt(p1, p2, "CustomPunkt",'p');
             } catch (PunktExistiertBereitsException e) {
                 Error.setText(e.getMessage());
                 throw new RuntimeException(e);

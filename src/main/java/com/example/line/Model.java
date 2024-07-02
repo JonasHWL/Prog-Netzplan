@@ -118,7 +118,7 @@ public class Model {
 
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
-                punkte.add(new Parkhaus(xPos, yPos));
+                punkte.add(new Parkhaus(xPos, yPos, "Parkhaus"));
             }
         }
 
@@ -132,9 +132,9 @@ public class Model {
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
                 if (!punkte.isEmpty()) {
-                    punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bushaltestelle(xPos, yPos));
+                    punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bushaltestelle(xPos, yPos, "Bushaltestelle"));
                 } else {
-                    punkte.add(new Bushaltestelle(xPos, yPos));
+                    punkte.add(new Bushaltestelle(xPos, yPos, "Bushaltestelle"));
                 }
             }
         }
@@ -149,9 +149,9 @@ public class Model {
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
                 if (!punkte.isEmpty()) {
-                    punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bahnhof(xPos, yPos));
+                    punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bahnhof(xPos, yPos, "Bahnhof"));
                 } else {
-                    punkte.add(new Bahnhof(xPos, yPos));
+                    punkte.add(new Bahnhof(xPos, yPos, "Bahnhof"));
                 }
             }
         }
@@ -225,7 +225,7 @@ public class Model {
      * @param datentyp Ob es Parkhaus 'p', Bushaltestelle 'b' oder Bahnhof 'z' ist
      * @throws PunktExistiertBereitsException Falls die Koordinaten schon belegt sind.
      */
-    public void benutzerDefinierterPunkt(int xPos, int yPos, char datentyp) throws PunktExistiertBereitsException {
+    public void benutzerDefinierterPunkt(int xPos, int yPos, String name ,char datentyp) throws PunktExistiertBereitsException {
         xPos *= POSITION_MULTIPLIKATOR_X;
         yPos *= POSITION_MULTIPLIKATOR_Y;
         Koordinaten neueKoordinaten = new Koordinaten(xPos, yPos);
@@ -233,7 +233,7 @@ public class Model {
             case 'p' :
                 if(!koordinaten.contains(neueKoordinaten)){
                     koordinaten.add(neueKoordinaten);
-                    Parkhaus parkhaus = new Parkhaus(xPos, yPos);
+                    Parkhaus parkhaus = new Parkhaus(xPos, yPos, name);
                     punkte.add(parkhaus);
                     parkhaus.setCustom(true);
                 } else {
@@ -243,7 +243,7 @@ public class Model {
             case 'b' :
                 if(!koordinaten.contains(neueKoordinaten)){
                     koordinaten.add(neueKoordinaten);
-                    Bushaltestelle bushaltestelle = new Bushaltestelle(xPos, yPos);
+                    Bushaltestelle bushaltestelle = new Bushaltestelle(xPos, yPos, name);
                     punkte.add(bushaltestelle);
                     bushaltestelle.setCustom(true);
                 } else {
@@ -253,7 +253,7 @@ public class Model {
             case 'z' :
                 if(!koordinaten.contains(neueKoordinaten)){
                     koordinaten.add(neueKoordinaten);
-                    Bahnhof bahnhof = new Bahnhof(xPos, yPos);
+                    Bahnhof bahnhof = new Bahnhof(xPos, yPos, name);
                     punkte.add(bahnhof);
                     bahnhof.setCustom(true);
                 } else {
@@ -356,14 +356,17 @@ public class Model {
      */
     private void searchImport(String zeile, String datentyp) {
         if (zeile.contains(datentyp + "[")) {
+            String name = zeile.split("Name=")[1].split(",")[0];
             double xPos = Double.parseDouble(zeile.split("xPos=")[1].split(",")[0]);
             double yPos = Double.parseDouble(zeile.split("yPos=")[1].split("]")[0]);
+            //TODO Name berücksichtigen.
+
             if (Objects.equals(datentyp, "Parkhaus")) {
-                punkte.add(new Parkhaus(xPos, yPos));
+                punkte.add(new Parkhaus(xPos, yPos, name));
             } else if (Objects.equals(datentyp, "Bushaltestelle")) {
-                punkte.add(new Bushaltestelle(xPos, yPos));
+                punkte.add(new Bushaltestelle(xPos, yPos, name));
             } else if (Objects.equals(datentyp, "Bahnhof")) {
-                punkte.add(new Bahnhof(xPos, yPos));
+                punkte.add(new Bahnhof(xPos, yPos, name));
             }
         }
     }
