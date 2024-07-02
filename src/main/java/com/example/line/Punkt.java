@@ -3,6 +3,8 @@ package com.example.line;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.util.ArrayList;
+
 /**
  * Punkte die auf der Benutzeroberfläche erscheinen.
  *
@@ -13,6 +15,7 @@ public abstract class Punkt extends Circle {
     private final double xPos;
     private final double yPos;
     private boolean custom;
+    private final ArrayList<WegGruppe> wegGruppen;
 
     /**
      * Konstruktor für die Punkte.
@@ -26,6 +29,7 @@ public abstract class Punkt extends Circle {
         this.xPos = xPos;
         this.yPos = yPos;
         custom = false;
+        wegGruppen = new ArrayList<>();
     }
 
     /**
@@ -60,5 +64,13 @@ public abstract class Punkt extends Circle {
 
     public void setCustom(boolean custom) {
         this.custom = custom;
+    }
+
+    public void addWeggruppe(WegGruppe wegGruppe) {
+        wegGruppen.add(wegGruppe);
+    }
+
+    public ArrayList<WegGruppe> getWegGruppen() {
+        return wegGruppen;
     }
 }

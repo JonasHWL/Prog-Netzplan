@@ -2,6 +2,7 @@ package com.example.line;
 
 import javafx.scene.layout.Pane;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.*;
@@ -79,7 +80,12 @@ public class Model {
         erstelleStraßen(root);
         System.out.println(punkte.getFirst());
         System.out.println(punkte.get(8));
-        berechneWeg(punkte.getFirst(), punkte.get(8), true);
+        berechneWeg2(punkte.get(1), punkte.get(8), true);
+        System.out.println("Weg2");
+        ArrayList<Weg> wegAusgabe = berechneWeg(punkte.get(1), punkte.get(8));
+        for(Weg weg : wegAusgabe){
+            System.out.println(weg.toString());
+        }
     }
 
     /**
@@ -171,7 +177,10 @@ public class Model {
             }
 
             //Hinzufügen der 4 Wege in einem Array zur generellen Arraylist.
-            this.wege.add(new WegGruppe(aktuell, naechste));
+            WegGruppe wegGruppe = new WegGruppe(aktuell, naechste);
+            this.wege.add(wegGruppe);
+            aktuell.addWeggruppe(wegGruppe);
+            naechste.addWeggruppe(wegGruppe);
         }
 
         /*
@@ -195,7 +204,10 @@ public class Model {
                 naechste = bahnhoefe.getFirst();
             }
 
-            this.wege.add(new WegGruppe(aktuell, naechste));
+            WegGruppe wegGruppe = new WegGruppe(aktuell, naechste);
+            this.wege.add(wegGruppe);
+            aktuell.addWeggruppe(wegGruppe);
+            naechste.addWeggruppe(wegGruppe);
         }
 
         //Zeichnen der Wege und Punkte
@@ -356,14 +368,16 @@ public class Model {
         }
     }
 
+    //TODO Wegberechnung verbessern
     /**
-     * Bestimmt alle Weg Objekte welche benötigt werden, um die Koordinaten für die Fahrzeuge zu bestimmen.
+     * Experimental! Fehlerhaft! Nicht Verwenden außer für Testzwecke
+     * bestimmt alle Weg Objekte welche benötigt werden, um die Koordinaten für die Fahrzeuge zu bestimmen.
      *
      * @param start Startpunkt
      * @param ziel  Endpunkt
      * @return Arraylist mit Weg Objekte von denen weg.get(i).getStartX aufgerufen werden kann,
      */
-    public ArrayList<Weg> berechneWeg(Punkt start, Punkt ziel, boolean normalfolge) {
+    private ArrayList<Weg> berechneWeg2(Punkt start, Punkt ziel, boolean normalfolge) {
         ArrayList<Weg> wegAusgabe = new ArrayList<>();
         ArrayList<Punkt> wegPunkte = new ArrayList<>();
         if(normalfolge){
@@ -389,6 +403,132 @@ public class Model {
         } else {
             //TODO Rückwärts berechnung
         }
+
+        return wegAusgabe;
+    }
+
+
+    //TODO Breitensuche verbessern
+
+    /**
+     * Experimental! Fehlerhaft! Nicht Verwenden außer für Testzwecke
+     *
+     * @param start Startpunkt
+     * @param ende Endpunk
+     * @return Wege die gefahren werden müssen
+     */
+    private ArrayList<Weg> berechneWeg(Punkt start, Punkt ende){
+        ArrayList<Weg> wegAusgabe = new ArrayList<>();
+
+        class Node {
+            // vargaenger = pi
+            Node vorgaenger;
+            static int entfernung;
+            // startpunktEntfernung = d
+            int startpunktEntfernung;
+            final Punkt punkt;
+            static int idZaeler;
+            final int id;
+            Color farbe;
+
+            // node = u
+            Node(Punkt punkt){
+                this.punkt = punkt;
+                this.id = idZaeler++;
+                this.farbe = Color.WHITE;
+                this.startpunktEntfernung = 0;
+                this.vorgaenger = this;
+            }
+        }
+
+        //nodes = G.V
+        ArrayList<Node> nodes = new ArrayList<>();
+        for(Punkt punkt : punkte){
+            nodes.add(new Node(punkt));
+        }
+
+        Node startNode = null;
+        for(Node node : nodes){
+            if(node.punkt == start){
+                startNode = node;
+                break;
+            }
+        }
+
+        if (startNode == null){
+            throw new IllegalStateException("Fehlender Punkt start Parameter");
+        }
+
+        startNode.farbe = Color.gray;
+        startNode.startpunktEntfernung = 0;
+        startNode.vorgaenger = startNode;
+
+        LinkedList<Node> queue = new LinkedList<>();
+        queue.add(startNode);
+
+
+
+        while(!queue.isEmpty()){
+            Node u = queue.pop();
+            for(int i = 0; i < u.punkt.getWegGruppen().size(); i++){
+                if(u.punkt.getWegGruppen().get(i).getStartPunkt() == u.punkt){
+                    Punkt tempPunkt = u.punkt.getWegGruppen().get(i).getEndPunkt();
+                    for( Node node : nodes){
+                        if(node.punkt == tempPunkt){
+                            if(node.farbe == Color.WHITE){
+                                node.farbe = Color.GRAY;
+                                node.startpunktEntfernung = u.startpunktEntfernung + 1;
+                                node.vorgaenger = u;
+                                queue.add(node);
+                            }
+                        }
+                    }
+                }
+            }
+            u.farbe = Color.BLACK;
+        }
+
+        System.out.println("Loool");
+
+        Node endeNode;
+        endeNode = null;
+        for(Node node : nodes){
+            if(node.punkt == ende){
+                endeNode = node;
+                break;
+            }
+        }
+
+        if (endeNode == null){
+            throw new IllegalStateException("Fehlender Punkt start Parameter");
+        }
+
+        int counter = 0;
+        Node aktuellerNode = endeNode;
+        Node letzterNode = null;
+        while(aktuellerNode.vorgaenger != aktuellerNode){
+            for(WegGruppe wegGruppe : aktuellerNode.punkt.getWegGruppen()){
+                if(aktuellerNode.vorgaenger.punkt == wegGruppe.getStartPunkt()){
+                    wegAusgabe.addAll(wegGruppe.getWege());
+                    counter++;
+                    break;
+                }
+            }
+            letzterNode = aktuellerNode;
+            aktuellerNode = aktuellerNode.vorgaenger;
+        }
+        for(WegGruppe wegGruppe : aktuellerNode.punkt.getWegGruppen()){
+            assert letzterNode != null;
+            if(letzterNode.punkt == wegGruppe.getStartPunkt()){
+                wegAusgabe.addAll(wegGruppe.getWege());
+                counter++;
+                break;
+            }
+        }
+
+
+        System.out.println("Kek");
+        System.out.println(counter);
 
         return wegAusgabe;
     }
