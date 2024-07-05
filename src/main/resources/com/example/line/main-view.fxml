@@ -30,7 +30,8 @@
                 <menus>
                     <Menu mnemonicParsing="false" text="File">
                         <items>
-                            <MenuItem mnemonicParsing="false" text="Platzhalter" />
+                            <MenuItem fx:id="ex" onAction="#ex" disable="true" mnemonicParsing="false" text="Export" />
+                            <MenuItem fx:id="in" onAction="#in" mnemonicParsing="false" text="Import" />
                         </items>
                     </Menu>
                     <Menu mnemonicParsing="false" text="Info">

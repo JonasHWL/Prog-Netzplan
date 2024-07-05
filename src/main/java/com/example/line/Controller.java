@@ -8,12 +8,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-
+/**
+ * Verwalten der Main-view.
+ * In dieser Class wird auf alles geguckt was die Buttons machen und verwaltet.
+ *
+ * @author Jonas Hanewinkel
+ * @version 03.07.2024
+ */
 public class Controller {
 
 
@@ -30,6 +37,11 @@ public class Controller {
     public Button customButton;
     @FXML
     public Button generieren;
+    @FXML
+    public MenuItem ex;
+    @FXML
+    public MenuItem in;
+
 
     @FXML
     CheckBox checkBoxP;
@@ -41,8 +53,16 @@ public class Controller {
     @FXML
     private Parent root;
 
+    /**
+     * In dieser Methode wird initialisiert das in dem anchorPane in der mitte des fensters der Netzplan erstellt wird.
+     *
+     * @param event Button click
+     */
     @FXML
     void generieren(ActionEvent event) {
+        //hier wird geguckt ob mindestens eine der Checkboxen am linken rand angehackt werden muss da sonst kein netzplan
+        //erstellt werden kann.
+        //wenn in
         if(!checkBoxP.isSelected() && !checkBoxBa.isSelected() && !checkBoxBu.isSelected()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -51,19 +71,22 @@ public class Controller {
             alert.showAndWait();
             return;
         }
+        //deaktiviert denn custom und den generieren Button da diese nicht mehr gebraucht werden wenn der Netzplan erstellt wurde
         customButton.setDisable(true);
         generieren.setDisable(true);
+        in.setDisable(true);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("anzahl-view.fxml"));
             root = loader.load();
             ControllerMenge controllerMenge = loader.getController();
-            controllerMenge.Uebernahme(anchorPane, checkBoxP.isSelected(), checkBoxBa.isSelected(), checkBoxBu.isSelected(),generieren, customButton);
+            controllerMenge.Uebernahme(anchorPane, checkBoxP.isSelected(), checkBoxBa.isSelected(), checkBoxBu.isSelected(),generieren, customButton, ex, in);
             Stage fenster1 = new Stage();
             fenster1.setTitle("Anzahl");
             fenster1.setScene(new Scene(root));
             fenster1.show();
         }
         catch (Exception e) {
+            //ausgabe in der Console wen das fenster nicht geladen werden konnte
             System.out.println("Fenster konnte nicht geladen werden");
         }
     }
@@ -76,6 +99,11 @@ public class Controller {
             über die methode Eingabe wird der Eingabe Button erstellt und die Funktion Uebergabe aufgerufen.
      */
 
+    /**
+     * Hier wird mit einem Button click das Custom fenster geöffnet.
+     *
+     * @param event Button click
+     */
     @FXML
     void Custom(ActionEvent event) throws IOException {
         try {
@@ -83,7 +111,7 @@ public class Controller {
             Parent root1 = (Parent) fxmlLoader.load();
             Stage fenster = new Stage();
             FensterController fensterController = fxmlLoader.getController();
-            //TODO fenster verbessern für eingabe von Custom bahnhof und bus halte
+            //übergabe der Stage und des Parents an den fensterController
             fensterController.uebergabe(fenster,root1);
             fenster.setTitle("Eingabe");
             fenster.setScene(new Scene(root1));
@@ -91,16 +119,21 @@ public class Controller {
         }
         catch (Exception e) {
             System.out.println("Fenster konnte nicht geladen werden");
-           // e.printStackTrace();
-
         }
     }
 
+    /**
+     * Diese Methode ist dafür da eine Stage zu beenden.
+     * Die Methode existiert damit sich code dopplungen vermieden werden kann.
+     *
+     * @param stage mit stage wird die Stage übergeben von der die Methode aufgerufen wurde
+     */
     @FXML
     public static void beenden(Stage stage){
         if(stage != null)
             stage.close();
     }
+
 
     /*
     ---------   Menubar     --------
@@ -119,5 +152,13 @@ public class Controller {
         help.showAndWait();
     }
 
+    @FXML
+    public void ex(ActionEvent event) {
+        model.export();
+    }
 
+    @FXML
+    public void in(ActionEvent event) {
+        model.importKarte(anchorPane);
+    }
 }
