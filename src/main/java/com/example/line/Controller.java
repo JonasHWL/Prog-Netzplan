@@ -38,6 +38,9 @@ public class Controller {
     @FXML
     public Button generieren;
     @FXML
+    public Button checkBox;
+
+    @FXML
     public MenuItem ex;
     @FXML
     public MenuItem in;
@@ -160,5 +163,20 @@ public class Controller {
     @FXML
     public void in(ActionEvent event) {
         model.importKarte(anchorPane);
+    }
+
+    public void start(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("routenplaner-view.fxml"));
+            root = loader.load();
+            Stage fenster1 = new Stage();
+            fenster1.setTitle("Anzahl");
+            fenster1.setScene(new Scene(root));
+            fenster1.show();
+        }
+        catch (Exception e) {
+            //ausgabe in der Console wen das fenster nicht geladen werden konnte
+            System.out.println("Fenster konnte nicht geladen werden");
+        }
     }
 }
