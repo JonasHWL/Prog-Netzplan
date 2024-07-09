@@ -109,6 +109,7 @@ public class Model {
      */
     private void generierePunkte(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhöfe) {
         final int ANFANG_VON_PUNKTE_ARRAYLIST = 0;
+        int anzahl = 1;
 
         while (koordinaten.size() < anzahlParkhaus) {
             int xPos = rand.nextInt(MINIMUM_POSITION_X, MAXIMUM_POSITION_X) * POSITION_MULTIPLIKATOR_X;
@@ -118,7 +119,7 @@ public class Model {
 
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
-                punkte.add(new Parkhaus(xPos, yPos, "Parkhaus"));
+                punkte.add(new Parkhaus(xPos, yPos, "Parkhaus " + anzahl++));
             }
         }
 
@@ -132,9 +133,9 @@ public class Model {
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
                 if (!punkte.isEmpty()) {
-                    punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bushaltestelle(xPos, yPos, "Bushaltestelle"));
+                    punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bushaltestelle(xPos, yPos, "Bushaltestelle " + anzahl++));
                 } else {
-                    punkte.add(new Bushaltestelle(xPos, yPos, "Bushaltestelle"));
+                    punkte.add(new Bushaltestelle(xPos, yPos, "Bushaltestelle " + anzahl++));
                 }
             }
         }
@@ -149,9 +150,9 @@ public class Model {
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
                 if (!punkte.isEmpty()) {
-                    punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bahnhof(xPos, yPos, "Bahnhof"));
+                    punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bahnhof(xPos, yPos, "Bahnhof " + anzahl++));
                 } else {
-                    punkte.add(new Bahnhof(xPos, yPos, "Bahnhof"));
+                    punkte.add(new Bahnhof(xPos, yPos, "Bahnhof " + anzahl++));
                 }
             }
         }
@@ -509,9 +510,9 @@ public class Model {
         int counter = 0;
         Node aktuellerNode = endeNode;
         Node letzterNode = null;
-        while(aktuellerNode.vorgaenger != aktuellerNode){
+        while(aktuellerNode.startpunktEntfernung != 0){
             for(WegGruppe wegGruppe : aktuellerNode.punkt.getWegGruppen()){
-                if(aktuellerNode.vorgaenger.punkt == wegGruppe.getStartPunkt()){
+                if(aktuellerNode.vorgaenger.punkt == wegGruppe.getStartPunkt() && aktuellerNode.punkt == wegGruppe.getEndPunkt()){
                     wegAusgabe.addAll(wegGruppe.getWege());
                     counter++;
                     break;
@@ -520,6 +521,7 @@ public class Model {
             letzterNode = aktuellerNode;
             aktuellerNode = aktuellerNode.vorgaenger;
         }
+        /*
         for(WegGruppe wegGruppe : aktuellerNode.punkt.getWegGruppen()){
             assert letzterNode != null;
             if(letzterNode.punkt == wegGruppe.getStartPunkt()){
@@ -527,7 +529,7 @@ public class Model {
                 counter++;
                 break;
             }
-        }
+        }*/
 
 
         System.out.println("Kek");
