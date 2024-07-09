@@ -3,9 +3,7 @@ package com.example.line;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -45,14 +43,22 @@ public class ControllerMenge {
     @FXML
     Integer anzahlFeld3;
 
+    /**
+     * hier werden die eingabe felder geprüft und in variablen geschrieben.
+     *
+     * @param event Button click
+     */
     @FXML
     void bestaetigen1(ActionEvent event) {
+        ex.setDisable(false);
         try{
             anzahlFeld1 = Integer.parseInt(eingabeZahlParkhaus.getText());
             anzahlFeld2 = Integer.parseInt(eingabeZahlBus.getText());
             anzahlFeld3 = Integer.parseInt(eingabeZahlBahnhof.getText());
             try{
+                //hier wird die beenden Methode aufgerufen mit der Stage auf der sich der bestaetigen1 befindet.
                 Controller.beenden((Stage) ((Node) event.getSource()).getScene().getWindow());
+                //weiterleitung an die erstellen Methode damit man sich code dopplungen vermeidet
                 erstellen(anzahlFeld1,anzahlFeld2,anzahlFeld3);
             }
             catch (NullPointerException e) {
@@ -64,6 +70,13 @@ public class ControllerMenge {
         }
     }
 
+    /**
+     * Die erstellen Methode ruft die generieren Methode in model auf um die Anzahl der Punkte festzulegen
+     *
+     * @param anzahlParkplatz Int werde wie viele Parkplätze
+     * @param anzahlBus Int werde wie viele bushaltestellen
+     * @param anzahlBahnhof Int werde wie viele bahnhöfe
+     */
     @FXML
     void erstellen(int anzahlParkplatz, int anzahlBus, int anzahlBahnhof){;
         model.generiere(anchorPane, anzahlParkplatz, anzahlBus, anzahlBahnhof);
@@ -73,20 +86,26 @@ public class ControllerMenge {
     AnchorPane anchorPane;
     Button erstellen;
     Button customB;
-
-    /** Uebergabe ist eine Methode die communication zwischen 2 Controllern möglich macht und sachen zwischen diesen austauscht.
+    MenuItem ex;
+    MenuItem in;
+    /**
+     * Uebergabe ist eine Methode die communication zwischen 2 Controllern möglich macht und sachen zwischen diesen austauscht.
      *
-     * @param pane übergabe
+     * @param pane übergabe des AnchorPanes von der die Methode aufgerufen wurde.
      * @param P gibt an ob das Parkhaus als checkBox aktiviert ist
      * @param Ba gibt an ob der Bahnhof als checkBox aktiviert ist
      * @param Bu gibt an ob die Bushaltestellen als checkBox aktiviert ist
      * @param eline gibt denn Eline Button an die neue Scene weiter
      * @param custom gibt denn custom Button an die neue Scene weiter
      */
-    public void Uebernahme(AnchorPane pane, boolean P, boolean Ba, boolean Bu, Button eline, Button custom ){
+    public void Uebernahme(AnchorPane pane, boolean P, boolean Ba, boolean Bu, Button eline, Button custom, MenuItem exU, MenuItem inU){
         anchorPane = pane;
         erstellen = eline;
         customB = custom;
+        ex = exU;
+        in = inU;
+        //Hier wird geguckt welche CheckBox auf der Main view ausgewählt ist
+        //Guckt welche nicht gecheckt sind und setzt diese dann auf 0
         if(!P){
 
             eingabeZahlParkhaus.setText("0");
@@ -96,7 +115,6 @@ public class ControllerMenge {
             eingabeZahlParkhaus.setVisible(false);
         }
         if(!Ba){
-            //TODO muss noch auf 0 gesetzt werden
             eingabeZahlBus.setText("0");
             anzahlBus.setDisable(true);
             eingabeZahlBus.setDisable(true);
@@ -104,7 +122,6 @@ public class ControllerMenge {
             eingabeZahlBus.setVisible(false);
         }
         if(!Bu){
-            //TODO muss noch auf 0 gesetzt werden
             eingabeZahlBahnhof.setText("0");
             anzahlBahnhof.setDisable(true);
             eingabeZahlBahnhof.setDisable(true);
@@ -121,6 +138,7 @@ public class ControllerMenge {
     public void cancel(ActionEvent event) {
         erstellen.setDisable(false);
         customB.setDisable(false);
+        in.setDisable(false);
         Controller.beenden((Stage) ((Node) event.getSource()).getScene().getWindow());
     }
 }
