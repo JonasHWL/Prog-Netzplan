@@ -109,9 +109,15 @@ public class Model {
      */
     private void generierePunkte(int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhöfe) {
         final int ANFANG_VON_PUNKTE_ARRAYLIST = 0;
-        int anzahl = 1;
+        int anzahl = 0;
+        int zielPunkte = anzahlParkhaus + anzahlBushaltestellen + anzahlBahnhöfe;
 
-        while (koordinaten.size() < anzahlParkhaus) {
+        //Kontrolle ob, gewünschte Punkte nicht die maximale Anzahl an Punkten überschreitet
+        if (zielPunkte > MAXIMUM_POSITION_X * MAXIMUM_POSITION_Y){
+            zielPunkte = MAXIMUM_POSITION_X* MAXIMUM_POSITION_Y;
+        }
+
+        while (anzahl < anzahlParkhaus && anzahl < zielPunkte) {
             int xPos = rand.nextInt(MINIMUM_POSITION_X, MAXIMUM_POSITION_X) * POSITION_MULTIPLIKATOR_X;
             int yPos = rand.nextInt(MINIMUM_POSITION_Y, MAXIMUM_POSITION_Y) * POSITION_MULTIPLIKATOR_Y;
 
@@ -119,12 +125,12 @@ public class Model {
 
             if(!koordinaten.contains(neueKoordinaten)){
                 koordinaten.add(neueKoordinaten);
-                punkte.add(new Parkhaus(xPos, yPos, "Parkhaus " + anzahl++));
+                punkte.add(new Parkhaus(xPos, yPos, "Parkhaus " + 1 + anzahl++));
             }
         }
 
-        //Generation für Bushaltestellen
-        while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen){
+        //Erstellung der Bushaltestellen
+        while (anzahl < anzahlParkhaus+anzahlBushaltestellen && anzahl < zielPunkte){
             int xPos = rand.nextInt(MINIMUM_POSITION_X, MAXIMUM_POSITION_X) * POSITION_MULTIPLIKATOR_X;
             int yPos = rand.nextInt(MINIMUM_POSITION_Y, MAXIMUM_POSITION_Y) * POSITION_MULTIPLIKATOR_Y;
 
@@ -135,13 +141,13 @@ public class Model {
                 if (!punkte.isEmpty()) {
                     punkte.add(rand.nextInt(ANFANG_VON_PUNKTE_ARRAYLIST, punkte.size()), new Bushaltestelle(xPos, yPos, "Bushaltestelle " + anzahl++));
                 } else {
-                    punkte.add(new Bushaltestelle(xPos, yPos, "Bushaltestelle " + anzahl++));
+                    punkte.add(new Bushaltestelle(xPos, yPos, "Bushaltestelle " + 1 + anzahl++));
                 }
             }
         }
 
-        //Generation für Bahnhof
-        while (koordinaten.size() < anzahlParkhaus+anzahlBushaltestellen+anzahlBahnhöfe){
+        //Erstellung der Bahnhöfe
+        while (anzahl < anzahlParkhaus+anzahlBushaltestellen+anzahlBahnhöfe && anzahl < zielPunkte){
             int xPos = rand.nextInt(MINIMUM_POSITION_X, MAXIMUM_POSITION_X) * POSITION_MULTIPLIKATOR_X;
             int yPos = rand.nextInt(MINIMUM_POSITION_Y, MAXIMUM_POSITION_Y) * POSITION_MULTIPLIKATOR_Y;
 
@@ -184,10 +190,7 @@ public class Model {
             naechste.addWeggruppe(wegGruppe);
         }
 
-        /*
-        Erstellung vom Netz für die Bahnhöfe
-        Laufzeit O(n)
-         */
+        //Erstellung vom Netz für die Bahnhöfe
         ArrayList<Bahnhof> bahnhoefe = new ArrayList<>();
         for (Punkt punkt : punkte) {
             if (punkt instanceof Bahnhof) {
