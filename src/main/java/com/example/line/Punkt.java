@@ -17,7 +17,7 @@ public abstract class Punkt extends Circle {
     private final double xPos;
     private final double yPos;
     private boolean custom;
-    private final ArrayList<WegGruppe> wegGruppen;
+    private final ArrayList<Punkt> benachbartePunkte;
 
     /**
      * Konstruktor für die Punkte.
@@ -32,7 +32,7 @@ public abstract class Punkt extends Circle {
         this.yPos = yPos;
         this.name = name;
         custom = false;
-        wegGruppen = new ArrayList<>();
+        benachbartePunkte = new ArrayList<>();
     }
 
     /**
@@ -69,15 +69,13 @@ public abstract class Punkt extends Circle {
         this.custom = custom;
     }
 
-    public void addWeggruppe(WegGruppe wegGruppe) {
-        wegGruppen.add(wegGruppe);
-    }
-
-    public ArrayList<WegGruppe> getWegGruppen() {
-        return wegGruppen;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public void addBenachbartePunkte(Punkt punkt) {
+        if(!benachbartePunkte.contains(punkt)){
+            this.benachbartePunkte.add(punkt);
+        }
     }
 }

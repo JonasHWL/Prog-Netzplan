@@ -14,6 +14,10 @@ public class Straße extends Weg {
         super(start, ende, mitte, Color.BLACK, horizontal, zuMitte, schritt);
     }
 
+    Straße(Punkt start, Punkt ende){
+        super(start, ende, Color.BLACK);
+    }
+
     /**
      * Gibt alle Instanzvariablen als String aus
      * @return String mit Daten vom Parkhaus

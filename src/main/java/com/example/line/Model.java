@@ -5,6 +5,7 @@ import javafx.scene.layout.Pane;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.io.File;
 import java.io.IOException;
@@ -20,8 +21,9 @@ public class Model {
     private long seed;
     private Random rand;
     private final ArrayList<Punkt> punkte = new ArrayList<>();
+    private final ArrayList<Zwischenpunkt> zwischenpunkte = new ArrayList<>();
     private final HashSet<Koordinaten> koordinaten= new HashSet<>();
-    private final ArrayList<WegGruppe> wege= new ArrayList<>();
+    private final ArrayList<Weg> wege= new ArrayList<>();
     private final int MINIMUM_POSITION_X;
     private final int MAXIMUM_POSITION_X;
     private final int MINIMUM_POSITION_Y;
@@ -78,6 +80,7 @@ public class Model {
     public void generiere(Pane root ,int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof) {
         generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
         erstelleStraßen(root);
+        /*
         System.out.println(punkte.getFirst());
         System.out.println(punkte.get(8));
         berechneWeg2(punkte.get(1), punkte.get(8), true);
@@ -85,7 +88,7 @@ public class Model {
         ArrayList<Weg> wegAusgabe = berechneWeg(punkte.get(1), punkte.get(8));
         for(Weg weg : wegAusgabe){
             System.out.println(weg.toString());
-        }
+        }*/
     }
 
     /**
@@ -128,7 +131,6 @@ public class Model {
                 punkte.add(new Parkhaus(xPos, yPos, "Parkhaus " + 1 + anzahl++));
             }
         }
-
         //Erstellung der Bushaltestellen
         while (anzahl < anzahlParkhaus+anzahlBushaltestellen && anzahl < zielPunkte){
             int xPos = rand.nextInt(MINIMUM_POSITION_X, MAXIMUM_POSITION_X) * POSITION_MULTIPLIKATOR_X;
@@ -183,11 +185,26 @@ public class Model {
                 naechste = punkte.getFirst();
             }
 
-            //Hinzufügen der 4 Wege in einem Array zur generellen Arraylist.
-            WegGruppe wegGruppe = new WegGruppe(aktuell, naechste);
-            this.wege.add(wegGruppe);
-            aktuell.addWeggruppe(wegGruppe);
-            naechste.addWeggruppe(wegGruppe);
+            Zwischenpunkt mitte = new Zwischenpunkt((aktuell.getXPos() + naechste.getXPos())/2, (aktuell.getYPos() + naechste.getYPos())/2);
+            Zwischenpunkt startZuMitte = new Zwischenpunkt(aktuell.getXPos(), mitte.getYPos());
+            Zwischenpunkt mitteZuEnde = new Zwischenpunkt(mitte.getXPos(), naechste.getYPos());
+
+            aktuell.addBenachbartePunkte(startZuMitte);
+            startZuMitte.addBenachbartePunkte(aktuell);
+            startZuMitte.addBenachbartePunkte(mitte);
+            mitte.addBenachbartePunkte(startZuMitte);
+            mitte.addBenachbartePunkte(mitteZuEnde);
+            mitteZuEnde.addBenachbartePunkte(mitte);
+            mitteZuEnde.addBenachbartePunkte(naechste);
+            naechste.addBenachbartePunkte(mitteZuEnde);
+
+            this.zwischenpunkte.add(startZuMitte);
+            this.zwischenpunkte.add(mitteZuEnde);
+            this.zwischenpunkte.add(mitte);
+            this.wege.add(new Straße(aktuell, startZuMitte));
+            this.wege.add(new Straße(startZuMitte, mitte));
+            this.wege.add(new Straße(mitte, mitteZuEnde));
+            this.wege.add(new Straße(mitteZuEnde, naechste));
         }
 
         //Erstellung vom Netz für die Bahnhöfe
@@ -208,18 +225,13 @@ public class Model {
                 naechste = bahnhoefe.getFirst();
             }
 
-            WegGruppe wegGruppe = new WegGruppe(aktuell, naechste);
-            this.wege.add(wegGruppe);
-            aktuell.addWeggruppe(wegGruppe);
-            naechste.addWeggruppe(wegGruppe);
+            this.wege.add(new Schiene(aktuell, naechste));
         }
-
         //Zeichnen der Wege und Punkte
-        for (WegGruppe wegeArr : wege) {
-            root.getChildren().addAll(wegeArr.getWege());
-        }
-
+        root.getChildren().addAll(wege);
         root.getChildren().addAll(punkte);
+
+        punkte.addAll(zwischenpunkte);
     }
 
     /**
@@ -396,21 +408,7 @@ public class Model {
                     wegPunkte.add(punkte.get(i++));
                 }
             }
-
-            for (WegGruppe weg : wege) {
-                if(weg.getWege().size() == 4){
-                    for (Weg p : weg.getWege()) {
-                        if(wegPunkte.contains(weg.getStartPunkt())){
-                            System.out.println(p);
-                            wegAusgabe.add(p);
-                        }
-                    }
-                }
-            }
-        } else {
-            //TODO Rückwärts berechnung
         }
-
         return wegAusgabe;
     }
 
@@ -474,7 +472,7 @@ public class Model {
         queue.add(startNode);
 
 
-
+        /*
         while(!queue.isEmpty()){
             Node u = queue.pop();
             for(int i = 0; i < u.punkt.getWegGruppen().size(); i++){
@@ -536,7 +534,7 @@ public class Model {
 
 
         System.out.println("Kek");
-        System.out.println(counter);
+        //System.out.println(counter);
 
         return wegAusgabe;
     }
