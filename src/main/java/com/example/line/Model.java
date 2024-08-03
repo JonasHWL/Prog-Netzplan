@@ -80,15 +80,11 @@ public class Model {
     public void generiere(Pane root ,int anzahlParkhaus, int anzahlBushaltestellen, int anzahlBahnhof) {
         generierePunkte(anzahlParkhaus, anzahlBushaltestellen, anzahlBahnhof);
         erstelleStraßen(root);
-        /*
-        System.out.println(punkte.getFirst());
-        System.out.println(punkte.get(8));
-        berechneWeg2(punkte.get(1), punkte.get(8), true);
-        System.out.println("Weg2");
-        ArrayList<Weg> wegAusgabe = berechneWeg(punkte.get(1), punkte.get(8));
-        for(Weg weg : wegAusgabe){
-            System.out.println(weg.toString());
-        }*/
+        for (Punkt punkt : punkte) {
+            if (!(punkt instanceof Zwischenpunkt)) {
+                punkt.setBreitensucheErgebnis(breitensuche(punkt));
+            }
+        }
     }
 
     /**
@@ -415,6 +411,27 @@ public class Model {
 
     //TODO Breitensuche verbessern
 
+    class Node {
+        // vargaenger = pi
+        Node vorgaenger;
+        static int entfernung;
+        // startpunktEntfernung = d
+        int startpunktEntfernung;
+        final Punkt punkt;
+        static int idZaeler;
+        final int id;
+        Color farbe;
+
+        // node = u
+        Node(Punkt punkt){
+            this.punkt = punkt;
+            this.id = idZaeler++;
+            this.farbe = Color.WHITE;
+            this.startpunktEntfernung = 0;
+            this.vorgaenger = this;
+        }
+    }
+
     /**
      * Experimental! Fehlerhaft! Nicht Verwenden außer für Testzwecke
      *
@@ -422,29 +439,8 @@ public class Model {
      * @param ende Endpunk
      * @return Wege die gefahren werden müssen
      */
-    private ArrayList<Weg> berechneWeg(Punkt start, Punkt ende){
+    private ArrayList<Node> breitensuche(Punkt start){
         ArrayList<Weg> wegAusgabe = new ArrayList<>();
-
-        class Node {
-            // vargaenger = pi
-            Node vorgaenger;
-            static int entfernung;
-            // startpunktEntfernung = d
-            int startpunktEntfernung;
-            final Punkt punkt;
-            static int idZaeler;
-            final int id;
-            Color farbe;
-
-            // node = u
-            Node(Punkt punkt){
-                this.punkt = punkt;
-                this.id = idZaeler++;
-                this.farbe = Color.WHITE;
-                this.startpunktEntfernung = 0;
-                this.vorgaenger = this;
-            }
-        }
 
         //nodes = G.V
         ArrayList<Node> nodes = new ArrayList<>();
@@ -471,21 +467,16 @@ public class Model {
         LinkedList<Node> queue = new LinkedList<>();
         queue.add(startNode);
 
-
-        /*
         while(!queue.isEmpty()){
             Node u = queue.pop();
-            for(int i = 0; i < u.punkt.getWegGruppen().size(); i++){
-                if(u.punkt.getWegGruppen().get(i).getStartPunkt() == u.punkt){
-                    Punkt tempPunkt = u.punkt.getWegGruppen().get(i).getEndPunkt();
-                    for( Node node : nodes){
-                        if(node.punkt == tempPunkt){
-                            if(node.farbe == Color.WHITE){
-                                node.farbe = Color.GRAY;
-                                node.startpunktEntfernung = u.startpunktEntfernung + 1;
-                                node.vorgaenger = u;
-                                queue.add(node);
-                            }
+            for(int i = 0; i < u.punkt.getBenachbartePunkte().size(); i++){
+                for( Node node : nodes){
+                    if(u.punkt.getBenachbartePunkte().contains(node.punkt)){
+                        if(node.farbe == Color.WHITE){
+                            node.farbe = Color.GRAY;
+                            node.startpunktEntfernung = u.startpunktEntfernung + 1;
+                            node.vorgaenger = u;
+                            queue.add(node);
                         }
                     }
                 }
@@ -493,49 +484,6 @@ public class Model {
             u.farbe = Color.BLACK;
         }
 
-        System.out.println("Loool");
-
-        Node endeNode;
-        endeNode = null;
-        for(Node node : nodes){
-            if(node.punkt == ende){
-                endeNode = node;
-                break;
-            }
-        }
-
-        if (endeNode == null){
-            throw new IllegalStateException("Fehlender Punkt start Parameter");
-        }
-
-        int counter = 0;
-        Node aktuellerNode = endeNode;
-        Node letzterNode = null;
-        while(aktuellerNode.startpunktEntfernung != 0){
-            for(WegGruppe wegGruppe : aktuellerNode.punkt.getWegGruppen()){
-                if(aktuellerNode.vorgaenger.punkt == wegGruppe.getStartPunkt() && aktuellerNode.punkt == wegGruppe.getEndPunkt()){
-                    wegAusgabe.addAll(wegGruppe.getWege());
-                    counter++;
-                    break;
-                }
-            }
-            letzterNode = aktuellerNode;
-            aktuellerNode = aktuellerNode.vorgaenger;
-        }
-        /*
-        for(WegGruppe wegGruppe : aktuellerNode.punkt.getWegGruppen()){
-            assert letzterNode != null;
-            if(letzterNode.punkt == wegGruppe.getStartPunkt()){
-                wegAusgabe.addAll(wegGruppe.getWege());
-                counter++;
-                break;
-            }
-        }*/
-
-
-        System.out.println("Kek");
-        //System.out.println(counter);
-
-        return wegAusgabe;
+        return nodes;
     }
 }

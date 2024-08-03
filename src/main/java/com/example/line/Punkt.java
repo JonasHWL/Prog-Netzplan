@@ -18,6 +18,7 @@ public abstract class Punkt extends Circle {
     private final double yPos;
     private boolean custom;
     private final ArrayList<Punkt> benachbartePunkte;
+    private ArrayList<Model.Node> breitensucheErgebnis;
 
     /**
      * Konstruktor für die Punkte.
@@ -33,6 +34,7 @@ public abstract class Punkt extends Circle {
         this.name = name;
         custom = false;
         benachbartePunkte = new ArrayList<>();
+        breitensucheErgebnis = new ArrayList<>();
     }
 
     /**
@@ -77,5 +79,17 @@ public abstract class Punkt extends Circle {
         if(!benachbartePunkte.contains(punkt)){
             this.benachbartePunkte.add(punkt);
         }
+    }
+
+    public ArrayList<Punkt> getBenachbartePunkte() {
+        return benachbartePunkte;
+    }
+
+    public ArrayList<Model.Node> getBreitensucheErgebnis() {
+        return breitensucheErgebnis;
+    }
+
+    public void setBreitensucheErgebnis(ArrayList<Model.Node> breitensucheErgebnis) {
+        this.breitensucheErgebnis = breitensucheErgebnis;
     }
 }
