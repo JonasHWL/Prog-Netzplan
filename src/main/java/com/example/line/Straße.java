@@ -9,11 +9,6 @@ import javafx.scene.paint.Color;
  * @version 07.06.2024
  */
 public class Straße extends Weg {
-
-    Straße(Punkt start, Punkt ende, Zwischenpunkt mitte, boolean horizontal, boolean zuMitte, int schritt) {
-        super(start, ende, mitte, Color.BLACK, horizontal, zuMitte, schritt);
-    }
-
     Straße(Punkt start, Punkt ende){
         super(start, ende, Color.BLACK);
     }

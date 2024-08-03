@@ -20,46 +20,6 @@ public abstract class Weg extends Line {
     private final int schritt;
     private final Punkt start;
 
-    Weg(Punkt start, Punkt ende, Zwischenpunkt mitte, Color farbe, boolean horizontal, boolean zuMitte, int schritt) {
-        super(
-            zuMitte ? //Für Line StartX
-                start.getXPos() : //zuMitte true
-                mitte.getXPos(), //zuMitte false
-
-            horizontal ? //Fur Line StartY
-                zuMitte ? //Horizontal true
-                    mitte.getYPos() : //zuMitte true
-                    ende.getYPos() //zzMitte false
-                : zuMitte ? //Horizontal false
-                    start.getYPos() : //zuMitte true
-                    mitte.getYPos(), //zuMitte false
-
-            horizontal ? //Fur Line EndX
-                zuMitte ? //Horizontal true
-                    mitte.getXPos() : //zuMitte true
-                    ende.getXPos() //zuMitte false
-                : zuMitte ? //Horizontal false
-                    start.getXPos() : //zuMitte true
-                    mitte.getXPos(), //zuMitte false
-
-            zuMitte ? //Für Line EndY
-                mitte.getYPos() : //zuMitte true
-                ende.getYPos()//zuMitte false
-        );
-
-        this.start = start;
-        this.startX = super.getStartX();
-        this.startY = super.getStartY();
-        this.endeX = super.getEndX();
-        this.endeY = super.getEndY();
-        this.farbe = farbe;
-        this.horizontal = horizontal;
-        this.zuMitte = zuMitte;
-        this.schritt = schritt;
-        super.setStroke(farbe);
-        super.setStrokeWidth(2);
-    }
-
     Weg(Punkt start, Punkt ende, Color farbe){
         super(start.getXPos(), start.getYPos(), ende.getXPos(), ende.getYPos());
         startX = start.getXPos();
