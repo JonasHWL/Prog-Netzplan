@@ -5,7 +5,6 @@ import javafx.scene.layout.Pane;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.io.File;
 import java.io.IOException;
@@ -300,6 +299,21 @@ public class Model {
     }
 
     /**
+     * Gibt ein Arraylist mit Punkt Objekten, welche nicht Zwischenpunkte sind als Datentyp aus.
+     *
+     * @return Arraylist mit Punkt Objekten
+     */
+    public ArrayList<Punkt> getNichtZwischenpunktPunkte(){
+        ArrayList<Punkt> nichtZwischenpunktPunkte = new ArrayList<>();
+        for (Punkt punkt : punkte) {
+            if (!(punkt instanceof Zwischenpunkt)) {
+                nichtZwischenpunktPunkte.add(punkt);
+            }
+        }
+        return nichtZwischenpunktPunkte;
+    }
+
+    /**
      * Erstellt eine .txt Datei welche Informationen zur Generation der Karte mitgibt.
      * Der Seed.
      * Die Anzahl von Punkten.
@@ -371,8 +385,6 @@ public class Model {
             String name = zeile.split("Name=")[1].split(",")[0];
             double xPos = Double.parseDouble(zeile.split("xPos=")[1].split(",")[0]);
             double yPos = Double.parseDouble(zeile.split("yPos=")[1].split("]")[0]);
-            //TODO Name berücksichtigen.
-
             if (Objects.equals(datentyp, "Parkhaus")) {
                 punkte.add(new Parkhaus(xPos, yPos, name));
             } else if (Objects.equals(datentyp, "Bushaltestelle")) {
@@ -383,36 +395,11 @@ public class Model {
         }
     }
 
-    //TODO Wegberechnung verbessern
     /**
-     * Experimental! Fehlerhaft! Nicht Verwenden außer für Testzwecke
-     * bestimmt alle Weg Objekte welche benötigt werden, um die Koordinaten für die Fahrzeuge zu bestimmen.
-     *
-     * @param start Startpunkt
-     * @param ziel  Endpunkt
-     * @return Arraylist mit Weg Objekte von denen weg.get(i).getStartX aufgerufen werden kann,
+     * Die Klasse Node dient dazu, um die Punkte klasse so zu übersetzen, dass es möglich ist die Breitensuche oder Dijkstra-Algorithmus anzuwenden.
      */
-    private ArrayList<Weg> berechneWeg2(Punkt start, Punkt ziel, boolean normalfolge) {
-        ArrayList<Weg> wegAusgabe = new ArrayList<>();
-        ArrayList<Punkt> wegPunkte = new ArrayList<>();
-        if(normalfolge){
-            int i = punkte.lastIndexOf(start);
-            int j = punkte.lastIndexOf(ziel);
-            wegPunkte.add(start);
-            if (i != -1 && j != -1) {
-                while (i < j) {
-                    wegPunkte.add(punkte.get(i++));
-                }
-            }
-        }
-        return wegAusgabe;
-    }
-
-
-    //TODO Breitensuche verbessern
-
-    class Node {
-        // vargaenger = pi
+    static class Node {
+        // vorgaenger = pi
         Node vorgaenger;
         static int entfernung;
         // startpunktEntfernung = d
@@ -433,15 +420,13 @@ public class Model {
     }
 
     /**
-     * Experimental! Fehlerhaft! Nicht Verwenden außer für Testzwecke
+     * Breitensuche für den jeweiligen punkt.
+     * Gibt ein Arraylist aus mit Nodes welche als vorgaenger ein Node haben welche den schnellsten weg zum Start Node hätten.
      *
      * @param start Startpunkt
-     * @param ende Endpunk
      * @return Wege die gefahren werden müssen
      */
     private ArrayList<Node> breitensuche(Punkt start){
-        ArrayList<Weg> wegAusgabe = new ArrayList<>();
-
         //nodes = G.V
         ArrayList<Node> nodes = new ArrayList<>();
         for(Punkt punkt : punkte){
@@ -485,5 +470,33 @@ public class Model {
         }
 
         return nodes;
+    }
+
+    /**
+     * Gibt ein Arraylist von Punkten aus, zu dem sich ein Fahrzeug hinbewegen muss um von einem Punkt zu dem anderen zu kommen.
+     * Von jedem Punkt müssen X und Y Koordinaten abgelesen werden.
+     *
+     * @param start Start
+     * @param ende Ziel
+     * @return Arraylist mit Punkten welche in der reihenfolge besucht werden müssen
+     */
+    public ArrayList<Punkt> schnellsterWeg(Punkt start, Punkt ende){
+        Node zielNode = null;
+        for (Node node : start.getBreitensucheErgebnis()) {
+            if (node.punkt == ende) {
+                zielNode = node;
+                break;
+            }
+        }
+
+        ArrayList<Punkt> wegZwischenZiele = new ArrayList<>();
+        Node aktuellerNode = zielNode;
+        assert aktuellerNode != null;
+        while(aktuellerNode.startpunktEntfernung != 0){
+            wegZwischenZiele.add(aktuellerNode.punkt);
+            aktuellerNode = aktuellerNode.vorgaenger;
+        }
+        wegZwischenZiele.add(aktuellerNode.punkt);
+        return wegZwischenZiele;
     }
 }
